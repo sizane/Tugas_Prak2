@@ -5,7 +5,6 @@ const router = Router();
 
 router.get('/', (req, res) => {
   /* #swagger.tags = ['Audit Logs']
-     #swagger.summary = 'Daftar audit log (metadata di-parse dari JSON)'
      #swagger.parameters['userId'] = { in: 'query' }
      #swagger.parameters['action'] = { in: 'query' }
      #swagger.parameters['targetTable'] = { in: 'query', description: 'mis. STALLS, REVIEWS' }
@@ -17,7 +16,6 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   /* #swagger.tags = ['Audit Logs']
-     #swagger.summary = 'Catat audit log'
      #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/AuditLogInput" } } } }
   */
   return ctrl.create(req, res);

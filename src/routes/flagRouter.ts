@@ -5,7 +5,6 @@ const router = Router();
 
 router.get('/', (req, res) => {
   /* #swagger.tags = ['Flags']
-     #swagger.summary = 'Daftar laporan + review + pelapor'
      #swagger.parameters['status'] = { in: 'query', description: 'pending | resolved | dismissed' }
      #swagger.parameters['reviewId'] = { in: 'query' }
      #swagger.parameters['page'] = { in: 'query' }
@@ -16,7 +15,6 @@ router.get('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   /* #swagger.tags = ['Flags']
-     #swagger.summary = 'Update status laporan (pending | resolved | dismissed)'
      #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/FlagStatusInput" } } } }
   */
   return ctrl.updateStatus(req, res);
