@@ -172,7 +172,6 @@
         "tags": [
           "Users"
         ],
-        "summary": "Daftar user (tanpa password hash)",
         "description": "",
         "parameters": [
           {
@@ -208,7 +207,6 @@
         "tags": [
           "Users"
         ],
-        "summary": "Buat user",
         "description": "",
         "responses": {
           "201": {
@@ -232,7 +230,6 @@
         "tags": [
           "Menu Items"
         ],
-        "summary": "Daftar menu beserta data kedai",
         "description": "",
         "parameters": [
           {
@@ -274,7 +271,6 @@
         "tags": [
           "Menu Items"
         ],
-        "summary": "Buat menu",
         "description": "",
         "responses": {
           "201": {
@@ -298,7 +294,6 @@
         "tags": [
           "Menu Items"
         ],
-        "summary": "Detail menu + kedai",
         "description": "",
         "parameters": [
           {
@@ -318,7 +313,6 @@
         "tags": [
           "Menu Items"
         ],
-        "summary": "Ubah menu (field opsional)",
         "description": "",
         "parameters": [
           {
@@ -348,7 +342,6 @@
         "tags": [
           "Menu Items"
         ],
-        "summary": "Hapus menu",
         "description": "",
         "parameters": [
           {
@@ -370,7 +363,6 @@
         "tags": [
           "Reviews"
         ],
-        "summary": "Daftar review + nama user (JOIN users)",
         "description": "",
         "parameters": [
           {
@@ -406,7 +398,6 @@
         "tags": [
           "Reviews"
         ],
-        "summary": "Buat review (1 user 1 review per kedai). avg_rating & review_count kedai ikut diperbarui",
         "description": "",
         "responses": {
           "201": {
@@ -430,7 +421,6 @@
         "tags": [
           "Reviews"
         ],
-        "summary": "Hapus review (like & flag ikut terhapus, statistik kedai diperbarui)",
         "description": "",
         "parameters": [
           {
@@ -452,7 +442,6 @@
         "tags": [
           "Flags"
         ],
-        "summary": "Daftar laporan + review + pelapor",
         "description": "",
         "parameters": [
           {
@@ -489,7 +478,6 @@
         "tags": [
           "Flags"
         ],
-        "summary": "Update status laporan (pending | resolved | dismissed)",
         "description": "",
         "parameters": [
           {
@@ -521,7 +509,6 @@
         "tags": [
           "Audit Logs"
         ],
-        "summary": "Daftar audit log (metadata di-parse dari JSON)",
         "description": "",
         "parameters": [
           {
@@ -561,7 +548,6 @@
         "tags": [
           "Audit Logs"
         ],
-        "summary": "Catat audit log",
         "description": "",
         "responses": {
           "201": {
@@ -585,7 +571,6 @@
         "tags": [
           "Likes"
         ],
-        "summary": "Like sebuah review (like_count review ikut bertambah)",
         "description": "",
         "responses": {
           "201": {
@@ -609,7 +594,6 @@
         "tags": [
           "Likes"
         ],
-        "summary": "Batalkan like (like_count review ikut berkurang)",
         "description": "",
         "parameters": [
           {
