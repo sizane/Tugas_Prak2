@@ -3,14 +3,22 @@ import { sql } from 'drizzle-orm';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './docs/swagger-output.json' with { type: 'json' };
 import { getDb } from './db/index.ts';
+
+// 1. Import semua router kamu di sini
 import { stallRouter } from './routes/stallRouter.ts';
+import userRouter from './routes/userRouter.ts'; // sesuaikan nama filenya
+import menuItemRouter from './routes/menuItemRouter.ts';
+import reviewRouter from './routes/reviewRouter.ts';
+import flagRouter from './routes/flagRouter.ts';
+import auditLogRouter from './routes/auditLogRouter.ts';
+import likeRouter from './routes/likeRouter.ts';
 
 const app: Application = express();
 const PORT: number = 3000;
 
 app.use(express.json());
 
-// Dokumentasi API (Swagger UI) dari spec hasil generate swagger-autogen.
+// Dokumentasi API (Swagger UI)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/health', async (req: Request, res: Response) => {
@@ -27,7 +35,14 @@ app.get('/health', async (req: Request, res: Response) => {
   }
 });
 
+// 2. Daftarkan semua route dengan prefix /api/v1
 app.use('/api/v1/stalls', stallRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/menu-items', menuItemRouter);
+app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/flags', flagRouter);
+app.use('/api/v1/audit-logs', auditLogRouter);
+app.use('/api/v1/likes', likeRouter);
 
 app.listen(PORT, () => {
   console.log(`Server berjalan di http://localhost:${PORT}`);
