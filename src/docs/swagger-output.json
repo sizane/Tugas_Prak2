@@ -265,8 +265,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         }
       },
@@ -277,8 +277,8 @@
         "summary": "Buat menu",
         "description": "",
         "responses": {
-          "201": {
-            "description": "Created"
+          "default": {
+            "description": ""
           }
         },
         "requestBody": {
@@ -309,8 +309,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         }
       },
@@ -329,8 +329,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         },
         "requestBody": {
@@ -359,8 +359,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         }
       }

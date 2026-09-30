@@ -1,31 +1,19 @@
-import { type Request, type Response } from 'express';
-import { validateCreateMenuItem } from '../dtos/menuItemDto.ts';
-import * as menuItemService from '../services/menuItemService.ts';
+import type { Request, Response } from 'express';
+import * as service from '../services/menuItemService.ts';
+import { handleError } from '../utils/errors.ts';
 
-export const createMenuItem = async (req: Request, res: Response) => {
-  try {
-    // 1. Validasi input
-    const { isValid, errors } = validateCreateMenuItem(req.body);
-    if (!isValid) {
-      return res.status(400).json({
-        status: 'error',
-        message: 'Validasi gagal',
-        errors,
-      });
-    }
-
-    // 2. Eksekusi service
-    const newItem = await menuItemService.create(req.body);
-    return res.status(201).json({
-      status: 'success',
-      data: newItem,
-    });
-  } catch (error: any) {
-    console.error(error);
-    return res.status(500).json({
-      status: 'error',
-      message: 'Terjadi kesalahan pada server',
-      error: error?.message || String(error),
-    });
-  }
-};
+export async function list(req: Request, res: Response) {
+  try { res.json(await service.list(req.query)); } catch (e) { handleError(res, e); }
+}
+export async function get(req: Request, res: Response) {
+  try { res.json({ data: await service.get(req.params.id) }); } catch (e) { handleError(res, e); }
+}
+export async function create(req: Request, res: Response) {
+  try { res.status(201).json({ data: await service.create(req.body) }); } catch (e) { handleError(res, e); }
+}
+export async function update(req: Request, res: Response) {
+  try { res.json({ data: await service.update(req.params.id, req.body) }); } catch (e) { handleError(res, e); }
+}
+export async function remove(req: Request, res: Response) {
+  try { res.json({ message: 'Menu dihapus', data: await service.remove(req.params.id) }); } catch (e) { handleError(res, e); }
+}

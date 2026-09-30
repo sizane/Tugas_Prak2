@@ -1,40 +1,24 @@
-export interface CreateMenuItemDto {
-  stallId: number;
-  name: string;
-  price: number;
-  description?: string;
-  isAvailable?: boolean;
-}
+import { AppError } from '../utils/errors.ts';
+import { optBool, reqInt, reqString, toId } from '../utils/validate.ts';
 
-export interface UpdateMenuItemDto {
-  name?: string;
-  price?: number;
-  description?: string;
-  isAvailable?: boolean;
-}
+export type CreateMenuItemDto = { stallId: number; name: string; price: number; isAvailable: boolean };
+export type UpdateMenuItemDto = Partial<CreateMenuItemDto>;
 
-// Fungsi validasi mandiri (tanpa dependensi file utils)
-export function validateCreateMenuItem(body: any): { isValid: boolean; errors: string[] } {
-  const errors: string[] = [];
-
-  const stallId = Number(body?.stallId);
-  if (!Number.isInteger(stallId) || stallId <= 0) {
-    errors.push('stallId tidak valid');
-  }
-
-  if (typeof body?.name !== 'string' || !body.name.trim()) {
-    errors.push('name wajib diisi');
-  } else if (body.name.trim().length > 100) {
-    errors.push('name maksimal 100 karakter');
-  }
-
-  const price = Number(body?.price);
-  if (isNaN(price) || price < 0) {
-    errors.push('price harus berupa angka positif');
-  }
-
+export function parseCreateMenuItem(b: any): CreateMenuItemDto {
   return {
-    isValid: errors.length === 0,
-    errors,
+    stallId: toId(b?.stallId, 'stallId'),
+    name: reqString(b, 'name', 100),
+    price: reqInt(b, 'price', 0),
+    isAvailable: optBool(b, 'isAvailable') ?? true,
   };
+}
+
+export function parseUpdateMenuItem(b: any): UpdateMenuItemDto {
+  const out: UpdateMenuItemDto = {};
+  if (b?.stallId !== undefined) out.stallId = toId(b.stallId, 'stallId');
+  if (b?.name !== undefined) out.name = reqString(b, 'name', 100);
+  if (b?.price !== undefined) out.price = reqInt(b, 'price', 0);
+  if (b?.isAvailable !== undefined) out.isAvailable = optBool(b, 'isAvailable');
+  if (!Object.keys(out).length) throw new AppError('VALIDATION_ERROR', 400, 'Tidak ada field yang diubah');
+  return out;
 }

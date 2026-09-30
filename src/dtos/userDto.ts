@@ -1,24 +1,16 @@
-export interface CreateUserDto {
-  username: string;
-  email: string;
-  password?: string;
-  role?: string;
-}
+import { bad, reqString } from '../utils/validate.ts';
 
-// Fungsi validasi langsung dibuat di sini
-export function validateUserDto(data: any): { isValid: boolean; errors: string[] } {
-  const errors: string[] = [];
+export const ROLES = ['admin', 'owner', 'customer'] as const;
+export type UserRole = (typeof ROLES)[number];
 
-  if (!data.username || typeof data.username !== 'string' || data.username.trim() === '') {
-    errors.push('Username wajib diisi');
-  }
+export type CreateUserDto = { name: string; email: string; password: string; role: UserRole };
 
-  if (!data.email || typeof data.email !== 'string' || !data.email.includes('@')) {
-    errors.push('Email tidak valid');
-  }
-
-  return {
-    isValid: errors.length === 0,
-    errors,
-  };
+export function parseCreateUser(b: any): CreateUserDto {
+  const email = reqString(b, 'email', 150).toLowerCase();
+  if (!/^\S+@\S+\.\S+$/.test(email)) throw bad('format email tidak valid');
+  const password = reqString(b, 'password', 100);
+  if (password.length < 6) throw bad('password minimal 6 karakter');
+  const role = b?.role ?? 'customer';
+  if (!ROLES.includes(role)) throw bad(`role harus salah satu dari: ${ROLES.join(', ')}`);
+  return { name: reqString(b, 'name', 100), email, password, role };
 }
