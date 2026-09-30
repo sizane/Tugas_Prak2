@@ -199,8 +199,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         }
       },
@@ -211,8 +211,8 @@
         "summary": "Buat user",
         "description": "",
         "responses": {
-          "201": {
-            "description": "Created"
+          "default": {
+            "description": ""
           }
         },
         "requestBody": {
