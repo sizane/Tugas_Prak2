@@ -2,6 +2,13 @@ import { and, count, eq, like } from 'drizzle-orm';
 import { getDb } from '../db/index.ts';
 import { menuItems, stalls } from '../db/schema.ts';
 
+export class MenuItemRepository {
+  async findByStallId(stallId: number) {
+    const db = await getDb();
+    return db.select().from(menuItems).where(eq(menuItems.stallId, stallId));
+  }
+}
+
 const cols = {
   id: menuItems.id,
   stallId: menuItems.stallId,
