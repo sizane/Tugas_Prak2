@@ -166,6 +166,471 @@
           }
         }
       }
+    },
+    "/api/v1/users/": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Daftar user (tanpa password hash)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Cari nama / email",
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "description": "admin | owner | customer",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Buat user",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/menu-items/": {
+      "get": {
+        "tags": [
+          "Menu Items"
+        ],
+        "summary": "Daftar menu beserta data kedai",
+        "description": "",
+        "parameters": [
+          {
+            "name": "stallId",
+            "in": "query",
+            "description": "Filter per kedai",
+            "type": "string"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Cari nama menu",
+            "type": "string"
+          },
+          {
+            "name": "available",
+            "in": "query",
+            "description": "true | false",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Menu Items"
+        ],
+        "summary": "Buat menu",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuItemInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/menu-items/{id}": {
+      "get": {
+        "tags": [
+          "Menu Items"
+        ],
+        "summary": "Detail menu + kedai",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Menu Items"
+        ],
+        "summary": "Ubah menu (field opsional)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuItemInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Menu Items"
+        ],
+        "summary": "Hapus menu",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/": {
+      "get": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Daftar review + nama user (JOIN users)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "stallId",
+            "in": "query",
+            "description": "Filter per kedai",
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "Filter per user",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Buat review (1 user 1 review per kedai). avg_rating & review_count kedai ikut diperbarui",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}": {
+      "delete": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Hapus review (like & flag ikut terhapus, statistik kedai diperbarui)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/flags/": {
+      "get": {
+        "tags": [
+          "Flags"
+        ],
+        "summary": "Daftar laporan + review + pelapor",
+        "description": "",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "pending | resolved | dismissed",
+            "type": "string"
+          },
+          {
+            "name": "reviewId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/flags/{id}": {
+      "put": {
+        "tags": [
+          "Flags"
+        ],
+        "summary": "Update status laporan (pending | resolved | dismissed)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlagStatusInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-logs/": {
+      "get": {
+        "tags": [
+          "Audit Logs"
+        ],
+        "summary": "Daftar audit log (metadata di-parse dari JSON)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "targetTable",
+            "in": "query",
+            "description": "mis. STALLS, REVIEWS",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Audit Logs"
+        ],
+        "summary": "Catat audit log",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditLogInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/likes/": {
+      "post": {
+        "tags": [
+          "Likes"
+        ],
+        "summary": "Like sebuah review (like_count review ikut bertambah)",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LikeInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/likes/{reviewId}/{userId}": {
+      "delete": {
+        "tags": [
+          "Likes"
+        ],
+        "summary": "Batalkan like (like_count review ikut berkurang)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "definitions": {
