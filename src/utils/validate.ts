@@ -15,7 +15,7 @@ export function reqString(b: any, f: string, max: number): string {
   return v.trim();
 }
 
-/** undefined = tidak dikirim, null = dikosongkan */
+
 export function optString(b: any, f: string, max: number): string | null | undefined {
   const v = b?.[f];
   if (v === undefined) return undefined;

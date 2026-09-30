@@ -20,12 +20,8 @@
       "get": {
         "description": "",
         "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
+          "200": { "description": "OK" },
+          "500": { "description": "Internal Server Error" }
         }
       }
     },
@@ -33,31 +29,13 @@
       "get": {
         "description": "",
         "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "category",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "type": "integer"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "integer"
-          }
+          { "name": "search", "in": "query", "type": "string" },
+          { "name": "category", "in": "query", "type": "string" },
+          { "name": "page", "in": "query", "type": "integer" },
+          { "name": "limit", "in": "query", "type": "integer" }
         ],
         "responses": {
-          "200": {
-            "description": "Daftar warung"
-          }
+          "200": { "description": "Daftar warung" }
         }
       },
       "post": {
@@ -67,15 +45,11 @@
             "name": "body",
             "in": "body",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/StallInput"
-            }
+            "schema": { "$ref": "#/definitions/StallInput" }
           }
         ],
         "responses": {
-          "201": {
-            "description": "Warung dibuat"
-          }
+          "201": { "description": "Warung dibuat" }
         }
       }
     },
@@ -83,66 +57,37 @@
       "get": {
         "description": "",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          }
+          { "name": "id", "in": "path", "required": true, "type": "integer" }
         ],
         "responses": {
-          "200": {
-            "description": "Detail warung"
-          },
-          "404": {
-            "description": "Tidak ditemukan"
-          }
+          "200": { "description": "Detail warung" },
+          "404": { "description": "Tidak ditemukan" }
         }
       },
       "put": {
         "description": "",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          },
+          { "name": "id", "in": "path", "required": true, "type": "integer" },
           {
             "name": "body",
             "in": "body",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/StallInput"
-            }
+            "schema": { "$ref": "#/definitions/StallInput" }
           }
         ],
         "responses": {
-          "200": {
-            "description": "Warung ter-update"
-          },
-          "404": {
-            "description": "Tidak ditemukan"
-          }
+          "200": { "description": "Warung ter-update" },
+          "404": { "description": "Tidak ditemukan" }
         }
       },
       "delete": {
         "description": "",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          }
+          { "name": "id", "in": "path", "required": true, "type": "integer" }
         ],
         "responses": {
-          "200": {
-            "description": "Warung terhapus"
-          },
-          "404": {
-            "description": "Tidak ditemukan"
-          }
+          "200": { "description": "Warung terhapus" },
+          "404": { "description": "Tidak ditemukan" }
         }
       }
     },
@@ -150,469 +95,246 @@
       "get": {
         "description": "",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          }
+          { "name": "id", "in": "path", "required": true, "type": "integer" }
         ],
         "responses": {
-          "200": {
-            "description": "Daftar menu"
-          },
-          "404": {
-            "description": "Tidak ditemukan"
-          }
+          "200": { "description": "Daftar menu" },
+          "404": { "description": "Tidak ditemukan" }
         }
       }
     },
     "/api/v1/users/": {
       "get": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "description": "",
         "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "description": "Cari nama / email",
-            "type": "string"
-          },
-          {
-            "name": "role",
-            "in": "query",
-            "description": "admin | owner | customer",
-            "type": "string"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "string"
-          }
+          { "name": "search", "in": "query", "description": "Cari nama / email", "type": "string" },
+          { "name": "role", "in": "query", "description": "admin | owner | customer", "type": "string" },
+          { "name": "page", "in": "query", "type": "string" },
+          { "name": "limit", "in": "query", "type": "string" }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
+          "200": { "description": "OK" }
         }
       },
       "post": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UserInput" }
+          }
+        ],
         "responses": {
-          "201": {
-            "description": "Created"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserInput"
-              }
-            }
-          }
+          "201": { "description": "Created" }
         }
       }
     },
     "/api/v1/menu-items/": {
       "get": {
-        "tags": [
-          "Menu Items"
-        ],
+        "tags": ["Menu Items"],
         "description": "",
         "parameters": [
-          {
-            "name": "stallId",
-            "in": "query",
-            "description": "Filter per kedai",
-            "type": "string"
-          },
-          {
-            "name": "search",
-            "in": "query",
-            "description": "Cari nama menu",
-            "type": "string"
-          },
-          {
-            "name": "available",
-            "in": "query",
-            "description": "true | false",
-            "type": "string"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "string"
-          }
+          { "name": "stallId", "in": "query", "description": "Filter per kedai", "type": "string" },
+          { "name": "search", "in": "query", "description": "Cari nama menu", "type": "string" },
+          { "name": "available", "in": "query", "description": "true | false", "type": "string" },
+          { "name": "page", "in": "query", "type": "string" },
+          { "name": "limit", "in": "query", "type": "string" }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
+          "200": { "description": "OK" }
         }
       },
       "post": {
-        "tags": [
-          "Menu Items"
-        ],
+        "tags": ["Menu Items"],
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/MenuItemInput" }
+          }
+        ],
         "responses": {
-          "201": {
-            "description": "Created"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MenuItemInput"
-              }
-            }
-          }
+          "201": { "description": "Created" }
         }
       }
     },
     "/api/v1/menu-items/{id}": {
       "get": {
-        "tags": [
-          "Menu Items"
-        ],
+        "tags": ["Menu Items"],
         "description": "",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
+          { "name": "id", "in": "path", "required": true, "type": "string" }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
+          "200": { "description": "OK" }
         }
       },
       "put": {
-        "tags": [
-          "Menu Items"
-        ],
+        "tags": ["Menu Items"],
         "description": "",
         "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" },
           {
-            "name": "id",
-            "in": "path",
+            "name": "body",
+            "in": "body",
             "required": true,
-            "type": "string"
+            "schema": { "$ref": "#/definitions/MenuItemInput" }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MenuItemInput"
-              }
-            }
-          }
+          "200": { "description": "OK" }
         }
       },
       "delete": {
-        "tags": [
-          "Menu Items"
-        ],
+        "tags": ["Menu Items"],
         "description": "",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
+          { "name": "id", "in": "path", "required": true, "type": "string" }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
+          "200": { "description": "OK" }
         }
       }
     },
     "/api/v1/reviews/": {
       "get": {
-        "tags": [
-          "Reviews"
-        ],
+        "tags": ["Reviews"],
         "description": "",
         "parameters": [
-          {
-            "name": "stallId",
-            "in": "query",
-            "description": "Filter per kedai",
-            "type": "string"
-          },
-          {
-            "name": "userId",
-            "in": "query",
-            "description": "Filter per user",
-            "type": "string"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "string"
-          }
+          { "name": "stallId", "in": "query", "description": "Filter per kedai", "type": "string" },
+          { "name": "userId", "in": "query", "description": "Filter per user", "type": "string" },
+          { "name": "page", "in": "query", "type": "string" },
+          { "name": "limit", "in": "query", "type": "string" }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
+          "200": { "description": "OK" }
         }
       },
       "post": {
-        "tags": [
-          "Reviews"
-        ],
+        "tags": ["Reviews"],
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/ReviewInput" }
+          }
+        ],
         "responses": {
-          "201": {
-            "description": "Created"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReviewInput"
-              }
-            }
-          }
+          "201": { "description": "Created" }
         }
       }
     },
     "/api/v1/reviews/{id}": {
       "delete": {
-        "tags": [
-          "Reviews"
-        ],
+        "tags": ["Reviews"],
         "description": "",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
+          { "name": "id", "in": "path", "required": true, "type": "string" }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
+          "200": { "description": "OK" }
         }
       }
     },
     "/api/v1/flags/": {
       "get": {
-        "tags": [
-          "Flags"
-        ],
+        "tags": ["Flags"],
         "description": "",
         "parameters": [
-          {
-            "name": "status",
-            "in": "query",
-            "description": "pending | resolved | dismissed",
-            "type": "string"
-          },
-          {
-            "name": "reviewId",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "string"
-          }
+          { "name": "status", "in": "query", "description": "pending | resolved | dismissed", "type": "string" },
+          { "name": "reviewId", "in": "query", "type": "string" },
+          { "name": "page", "in": "query", "type": "string" },
+          { "name": "limit", "in": "query", "type": "string" }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
+          "200": { "description": "OK" }
         }
       }
     },
     "/api/v1/flags/{id}": {
       "put": {
-        "tags": [
-          "Flags"
-        ],
+        "tags": ["Flags"],
         "description": "",
         "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" },
           {
-            "name": "id",
-            "in": "path",
+            "name": "body",
+            "in": "body",
             "required": true,
-            "type": "string"
+            "schema": { "$ref": "#/definitions/FlagStatusInput" }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FlagStatusInput"
-              }
-            }
-          }
+          "200": { "description": "OK" }
         }
       }
     },
     "/api/v1/audit-logs/": {
       "get": {
-        "tags": [
-          "Audit Logs"
-        ],
+        "tags": ["Audit Logs"],
         "description": "",
         "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "action",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "targetTable",
-            "in": "query",
-            "description": "mis. STALLS, REVIEWS",
-            "type": "string"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "string"
-          }
+          { "name": "userId", "in": "query", "type": "string" },
+          { "name": "action", "in": "query", "type": "string" },
+          { "name": "targetTable", "in": "query", "description": "mis. STALLS, REVIEWS", "type": "string" },
+          { "name": "page", "in": "query", "type": "string" },
+          { "name": "limit", "in": "query", "type": "string" }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
+          "200": { "description": "OK" }
         }
       },
       "post": {
-        "tags": [
-          "Audit Logs"
-        ],
+        "tags": ["Audit Logs"],
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/AuditLogInput" }
+          }
+        ],
         "responses": {
-          "201": {
-            "description": "Created"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AuditLogInput"
-              }
-            }
-          }
+          "201": { "description": "Created" }
         }
       }
     },
     "/api/v1/likes/": {
       "post": {
-        "tags": [
-          "Likes"
-        ],
+        "tags": ["Likes"],
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/LikeInput" }
+          }
+        ],
         "responses": {
-          "201": {
-            "description": "Created"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LikeInput"
-              }
-            }
-          }
+          "201": { "description": "Created" }
         }
       }
     },
     "/api/v1/likes/{reviewId}/{userId}": {
       "delete": {
-        "tags": [
-          "Likes"
-        ],
+        "tags": ["Likes"],
         "description": "",
         "parameters": [
-          {
-            "name": "reviewId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
+          { "name": "reviewId", "in": "path", "required": true, "type": "string" },
+          { "name": "userId", "in": "path", "required": true, "type": "string" }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
+          "200": { "description": "OK" }
         }
       }
     }
@@ -621,31 +343,67 @@
     "StallInput": {
       "type": "object",
       "properties": {
-        "ownerId": {
-          "type": "number",
-          "example": 2
-        },
-        "name": {
-          "type": "string",
-          "example": "Warung Baru"
-        },
-        "category": {
-          "type": "string",
-          "example": "Nasi"
-        },
-        "location": {
-          "type": "string",
-          "example": "Kantin FK"
-        },
-        "description": {
-          "type": "string",
-          "example": ""
-        }
+        "ownerId": { "type": "number", "example": 2 },
+        "name": { "type": "string", "example": "Warung Baru" },
+        "category": { "type": "string", "example": "Nasi" },
+        "location": { "type": "string", "example": "Kantin FK" },
+        "description": { "type": "string", "example": "" }
       },
-      "required": [
-        "ownerId",
-        "name"
-      ]
+      "required": ["ownerId", "name"]
+    },
+    "UserInput": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "example": "John Doe" },
+        "email": { "type": "string", "example": "john@example.com" },
+        "password": { "type": "string", "example": "password123" },
+        "role": { "type": "string", "example": "customer" }
+      },
+      "required": ["name", "email", "password"]
+    },
+    "MenuItemInput": {
+      "type": "object",
+      "properties": {
+        "stallId": { "type": "number", "example": 1 },
+        "name": { "type": "string", "example": "Nasi Goreng" },
+        "price": { "type": "number", "example": 15000 },
+        "isAvailable": { "type": "boolean", "example": true }
+      },
+      "required": ["stallId", "name", "price"]
+    },
+    "ReviewInput": {
+      "type": "object",
+      "properties": {
+        "stallId": { "type": "number", "example": 1 },
+        "userId": { "type": "number", "example": 1 },
+        "rating": { "type": "number", "example": 5 },
+        "comment": { "type": "string", "example": "Enak banget!" }
+      },
+      "required": ["stallId", "userId", "rating"]
+    },
+    "FlagStatusInput": {
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "example": "resolved" }
+      },
+      "required": ["status"]
+    },
+    "AuditLogInput": {
+      "type": "object",
+      "properties": {
+        "userId": { "type": "number", "example": 1 },
+        "action": { "type": "string", "example": "CREATE_USER" },
+        "details": { "type": "string", "example": "Menambahkan user baru" }
+      },
+      "required": ["action"]
+    },
+    "LikeInput": {
+      "type": "object",
+      "properties": {
+        "reviewId": { "type": "number", "example": 1 },
+        "userId": { "type": "number", "example": 1 }
+      },
+      "required": ["reviewId", "userId"]
     }
   }
 }
