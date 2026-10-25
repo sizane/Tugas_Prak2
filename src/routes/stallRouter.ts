@@ -20,7 +20,7 @@ stallRouter.get('/', validate({ query: listStallsQuery }), (req, res) => {
 
 stallRouter.post('/',authenticate,authorize('owner', 'admin'),validate({ body: createStallBody }),(req, res) => {
     // #swagger.security = [{ "bearerAuth": [] }]
-    // #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/StallInput' } }
+    // #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/StallInput" } } } }
     // #swagger.responses[201] = { description: 'Warung dibuat' }
     // #swagger.responses[400] = { description: 'Validasi gagal' }
     // #swagger.responses[401] = { description: 'Belum login' }
@@ -40,7 +40,7 @@ stallRouter.get('/:id', validate({ params: idParams }), (req, res) => {
 stallRouter.put('/:id',authenticate,authorize('owner', 'admin'),validate({ params: idParams, body: updateStallBody }),(req, res) => {
     // #swagger.security = [{ "bearerAuth": [] }]
     // #swagger.parameters['id'] = { in: 'path', required: true, type: 'integer' }
-    // #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/StallInput' } }
+    // #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/StallInput" } } } }
     // #swagger.responses[200] = { description: 'Warung ter-update' }
     // #swagger.responses[400] = { description: 'Validasi gagal' }
     // #swagger.responses[401] = { description: 'Belum login' }
@@ -71,6 +71,19 @@ stallRouter.get('/:id/menus', validate({ params: idParams }), (req, res) => {
 stallRouter.post('/:id/reviews',authenticate,validate({ params: idParams, body: createReviewBody }),(req, res) => {
     // #swagger.security = [{ "bearerAuth": [] }]
     // #swagger.parameters['id'] = { in: 'path', required: true, type: 'integer' }
+    // #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/ReviewInput" } } } }
+    // #swagger.responses[201] = { description: 'Review dibuat' }
+    // #swagger.responses[400] = { description: 'Validasi gagal' }
+    // #swagger.responses[401] = { description: 'Belum login' }
+    // #swagger.responses[404] = { description: 'Warung tidak ditemukan' }
+    // #swagger.responses[409] = { description: 'Sudah pernah mereview' }
+    return reviewCtrl.createForStall(req, res);
+  },
+);
+stallRouter.post('/:id/reviews',authenticate,validate({ params: idParams, body: createReviewBody }),(req, res) => {
+    // #swagger.security = [{ "bearerAuth": [] }]
+    // #swagger.parameters['id'] = { in: 'path', required: true, type: 'integer' }
+    // #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/ReviewInput" } } } }
     // #swagger.responses[201] = { description: 'Review dibuat' }
     // #swagger.responses[400] = { description: 'Validasi gagal' }
     // #swagger.responses[401] = { description: 'Belum login' }
