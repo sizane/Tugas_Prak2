@@ -1162,7 +1162,7 @@
                   },
                   "example": {
                     "type": "string",
-                    "example": "budi@mail.com"
+                    "example": "budi@gmail.com"
                   }
                 }
               },
@@ -1224,7 +1224,7 @@
                   },
                   "example": {
                     "type": "string",
-                    "example": "budi@kantin.test"
+                    "example": "budi@gmail.com"
                   }
                 }
               },
@@ -1444,7 +1444,7 @@
                   },
                   "example": {
                     "type": "string",
-                    "example": "budi@mail.com"
+                    "example": "budi@gmail.com"
                   }
                 }
               },
