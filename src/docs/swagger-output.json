@@ -29,7 +29,6 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Registrasi akun baru (role otomatis customer)",
         "description": "",
         "responses": {
           "201": {
@@ -66,7 +65,6 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Login dan mendapatkan JWT",
         "description": "",
         "responses": {
           "200": {
@@ -96,7 +94,6 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Profil user yang sedang login",
         "description": "",
         "parameters": [
           {

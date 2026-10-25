@@ -3,8 +3,8 @@ import swaggerAutogen from 'swagger-autogen';
 const doc = {
   info: {
     title: 'Review Kantin API',
-    version: '1.0.0',
-    description: 'API review kantin. Endpoint bergembok butuh JWT: login di POST /auth/login, lalu klik Authorize.',
+    version: '1.2.0',
+    description: 'API review kantin. update dengan Autentikasi.',
   },
   servers: [{ url: 'http://localhost:3000' }],
   components: {
