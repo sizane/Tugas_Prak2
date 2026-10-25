@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { type Request, type Response, type Application } from 'express';
 import { sql } from 'drizzle-orm';
 import swaggerUi from 'swagger-ui-express';
@@ -12,14 +13,12 @@ import flagRouter from './routes/flagRouter.ts';
 import auditLogRouter from './routes/auditLogRouter.ts';
 import likeRouter from './routes/likeRouter.ts';
 
-import 'dotenv/config';
 import authRouter from './routes/authRouter.ts';
 import { errorHandler, notFound } from './middlewares/errorHandler.ts';
 
 const app: Application = express();
 const PORT: number = 3000;
 
-app.use('/api/v1/auth', authRouter); 
 app.use(express.json());
 
 // Dokumentasi API (Swagger UI)
@@ -40,6 +39,7 @@ app.get('/health', async (req: Request, res: Response) => {
 });
 
 // 2. Daftarkan semua route dengan prefix /api/v1
+app.use('/api/v1/auth', authRouter); 
 app.use('/api/v1/stalls', stallRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/menu-items', menuItemRouter);
