@@ -45,19 +45,19 @@ export class StallService {
 
   async getStallById(id: number): Promise<StallResponseDto> {
     const row = await this.stallRepository.findById(id);
-    if (!row) throw new Error('STALL_NOT_FOUND');
+    if (!row) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
     return this.toDto(row);
   }
 
   async getStallMenus(id: number): Promise<MenuItemDto[]> {
     const row = await this.stallRepository.findById(id);
-    if (!row) throw new Error('STALL_NOT_FOUND');
+    if (!row) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
     return this.menuItemRepository.findByStallId(id);
   }
 
   async createStall(input: CreateStallInput): Promise<StallResponseDto> {
     const row = await this.stallRepository.create(input);
-    if (!row) throw new Error('STALL_NOT_FOUND');
+    if (!row) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
     return this.toDto(row);
   }
 
@@ -74,7 +74,7 @@ export class StallService {
 
   async deleteStall(id: number): Promise<StallResponseDto> {
     const row = await this.stallRepository.remove(id);
-    if (!row) throw new Error('STALL_NOT_FOUND');
+    if (!row) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
     return this.toDto(row);
   }
 }

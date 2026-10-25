@@ -7,6 +7,7 @@ router.use(authenticate, authorize('admin'));
 
 router.get('/', (req, res) => {
   /* #swagger.tags = ['Users']
+     #swagger.security = [{ "bearerAuth": [] }]
      #swagger.parameters['search'] = { in: 'query', description: 'Cari nama / email' }
      #swagger.parameters['role'] = { in: 'query', description: 'admin | owner | customer' }
      #swagger.parameters['page'] = { in: 'query' }
@@ -17,6 +18,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   /* #swagger.tags = ['Users']
+     #swagger.security = [{ "bearerAuth": [] }]
      #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/UserInput" } } } }
   */
   return ctrl.create(req, res);

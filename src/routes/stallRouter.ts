@@ -80,17 +80,5 @@ stallRouter.post('/:id/reviews',authenticate,validate({ params: idParams, body: 
     return reviewCtrl.createForStall(req, res);
   },
 );
-stallRouter.post('/:id/reviews',authenticate,validate({ params: idParams, body: createReviewBody }),(req, res) => {
-    // #swagger.security = [{ "bearerAuth": [] }]
-    // #swagger.parameters['id'] = { in: 'path', required: true, type: 'integer' }
-    // #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/ReviewInput" } } } }
-    // #swagger.responses[201] = { description: 'Review dibuat' }
-    // #swagger.responses[400] = { description: 'Validasi gagal' }
-    // #swagger.responses[401] = { description: 'Belum login' }
-    // #swagger.responses[404] = { description: 'Warung tidak ditemukan' }
-    // #swagger.responses[409] = { description: 'Sudah pernah mereview' }
-    return reviewCtrl.createForStall(req, res);
-  },
-);
 
 export { stallRouter };

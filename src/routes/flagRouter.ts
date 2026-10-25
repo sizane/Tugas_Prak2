@@ -8,6 +8,7 @@ router.use(authenticate, authorize('admin'));
 
 router.get('/', (req, res) => {
   /* #swagger.tags = ['Flags']
+     #swagger.security = [{ "bearerAuth": [] }]
      #swagger.parameters['status'] = { in: 'query', description: 'pending | resolved | dismissed' }
      #swagger.parameters['reviewId'] = { in: 'query' }
      #swagger.parameters['page'] = { in: 'query' }
@@ -18,6 +19,7 @@ router.get('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   /* #swagger.tags = ['Flags']
+     #swagger.security = [{ "bearerAuth": [] }]
      #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/FlagStatusInput" } } } }
   */
   return ctrl.updateStatus(req, res);

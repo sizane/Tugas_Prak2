@@ -13,7 +13,7 @@ export async function list(req: Request, res: Response) {
 
 export async function create(req: Request, res: Response) {
   try {
-    const data = await service.create(req.body);
+    const data = await service.create({ ...req.body, userId: req.user!.id });
     return res.status(201).json({ status: 'success', data });
   } catch (e) {
     handleError(res, e);
