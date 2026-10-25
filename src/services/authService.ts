@@ -5,7 +5,6 @@ import { signToken } from '../utils/jwt.ts';
 
 export async function register(dto: { name: string; email: string; password: string }) {
   if (await repo.findByEmail(dto.email)) throw new AppError('EMAIL_TAKEN', 409, 'Email sudah terdaftar');
-  // role SELALU customer, tidak boleh dari body
   return repo.create({ name: dto.name, email: dto.email, passwordHash: hashPassword(dto.password), role: 'customer' });
 }
 

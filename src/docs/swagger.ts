@@ -34,7 +34,7 @@ const doc = {
         required: ['name', 'email', 'password'],
         properties: {
           name: { type: 'string', minLength: 3, maxLength: 100, example: 'Budi Santoso' },
-          email: { type: 'string', format: 'email', maxLength: 150, example: 'budi@mail.com' },
+          email: { type: 'string', format: 'email', maxLength: 150, example: 'budi@gmail.com' },
           password: { type: 'string', minLength: 8, maxLength: 72, example: 'Password123' },
         },
       },
@@ -42,7 +42,7 @@ const doc = {
         type: 'object',
         required: ['email', 'password'],
         properties: {
-          email: { type: 'string', format: 'email', example: 'budi@kantin.test' },
+          email: { type: 'string', format: 'email', example: 'budi@gmail.com' },
           password: { type: 'string', example: 'Password123' },
         },
       },
@@ -69,7 +69,7 @@ const doc = {
         required: ['name', 'email', 'password'],
         properties: {
           name: { type: 'string', example: 'Budi Santoso' },
-          email: { type: 'string', example: 'budi@mail.com' },
+          email: { type: 'string', example: 'budi@gmail.com' },
           password: { type: 'string', example: 'rahasia123' },
           role: { type: 'string', enum: ['admin', 'owner', 'customer'], example: 'customer' },
         },
