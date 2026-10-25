@@ -59,7 +59,7 @@ export async function findByUserAndStall(userId: number, stallId: number) {
 export async function createAndSync(data: { stallId: number; userId: number; rating: number; comment: string | null }) {
   const db = await getDb();
   const id = await db.transaction(async (tx) => {
-    const [row] = await tx.insert(reviews).output({ id: reviews.id }).values(data);
+    const [row] = await tx.insert(reviews).output({ id: reviews.id }).values({ ...data, likeCount: 0 });
     await syncStallStats(tx, data.stallId);
     return row.id;
   });

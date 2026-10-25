@@ -5,6 +5,8 @@ import {
 } from '../repositories/stallRepository.ts';
 import { MenuItemRepository } from '../repositories/menuItemRepository.ts';
 import type { MenuItemDto, StallResponseDto } from '../dtos/stallDto.ts';
+import { AppError } from '../utils/errors.ts';
+import type { AuthUser } from '../utils/jwt.ts';
 
 type StallRow = NonNullable<Awaited<ReturnType<StallRepository['findById']>>>;
 
@@ -59,11 +61,16 @@ export class StallService {
     return this.toDto(row);
   }
 
-  async updateStall(id: number, input: Partial<CreateStallInput>): Promise<StallResponseDto> {
-    const row = await this.stallRepository.update(id, input);
-    if (!row) throw new Error('STALL_NOT_FOUND');
-    return this.toDto(row);
+  async updateStall(id: number, input: Partial<CreateStallInput>, actor: AuthUser): Promise<StallResponseDto> {
+  const existing = await this.stallRepository.findById(id);
+  if (!existing) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
+  if (actor.role !== 'admin' && existing.ownerId !== actor.id) {
+    throw new AppError('FORBIDDEN', 403, 'Anda bukan pemilik warung ini'); // owner lain -> 403
   }
+  const row = await this.stallRepository.update(id, input);
+  if (!row) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
+  return this.toDto(row);
+ }
 
   async deleteStall(id: number): Promise<StallResponseDto> {
     const row = await this.stallRepository.remove(id);
@@ -71,3 +78,4 @@ export class StallService {
     return this.toDto(row);
   }
 }
+

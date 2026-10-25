@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import * as ctrl from '../controllers/likeController.ts';
+import { authenticate } from '../middlewares/auth.ts';
+
 
 const router = Router();
 
-router.post('/', (req, res) => {
+router.post('/', authenticate,(req, res) => {
   /* 
     #swagger.tags = ['Likes']
     #swagger.parameters['body'] = {
@@ -15,7 +17,7 @@ router.post('/', (req, res) => {
   */
   return ctrl.create(req, res);
 });
-router.delete('/:reviewId/:userId', (req, res) => {
+router.delete('/:reviewId/:userId', authenticate,(req, res) => {
   /* #swagger.tags = ['Likes']
   */
   return ctrl.remove(req, res);

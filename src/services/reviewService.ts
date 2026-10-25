@@ -31,3 +31,11 @@ export async function remove(idParam: unknown) {
   await repo.removeAndSync(id, existing.stallId);
   return existing;
 }
+
+export async function createForStall(stallId: number, userId: number, body: { rating: number; comment?: string }) {
+  if (!(await stallExists(stallId))) throw new AppError('STALL_NOT_FOUND', 404, 'Warung tidak ditemukan');
+  if (await repo.findByUserAndStall(userId, stallId)) {
+    throw new AppError('REVIEW_ALREADY_EXISTS', 409, 'User sudah mereview warung ini');
+  }
+  return repo.createAndSync({ stallId, userId, rating: body.rating, comment: body.comment ?? null });
+}

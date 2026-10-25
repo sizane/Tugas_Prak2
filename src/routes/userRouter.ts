@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import * as ctrl from '../controllers/userController.ts';
+import { authenticate, authorize } from '../middlewares/auth.ts';
 
 const router = Router();
+router.use(authenticate, authorize('admin'));
 
 router.get('/', (req, res) => {
   /* #swagger.tags = ['Users']

@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import * as ctrl from '../controllers/auditLogController.ts';
+import { authenticate, authorize } from '../middlewares/auth.ts';
 
 const router = Router();
-
+router.use(authenticate, authorize('admin'));
 router.get('/', (req, res) => {
   /* #swagger.tags = ['Audit Logs']
      #swagger.parameters['userId'] = { in: 'query' }

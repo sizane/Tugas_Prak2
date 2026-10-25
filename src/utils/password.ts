@@ -1,6 +1,6 @@
-import { randomBytes, scryptSync } from 'node:crypto';
+import bcrypt from 'bcryptjs';
 
-export function hashPassword(password: string): string {
-  const salt = randomBytes(16).toString('hex');
-  return `${salt}:${scryptSync(password, salt, 64).toString('hex')}`;
-}
+export const hashPassword = (password: string): string => bcrypt.hashSync(password, 10);
+
+export const verifyPassword = (password: string, hash: string): boolean =>
+  bcrypt.compareSync(password, hash);

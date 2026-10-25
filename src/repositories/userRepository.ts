@@ -28,3 +28,15 @@ export async function create(data: { name: string; email: string; passwordHash: 
   const [row] = await db.insert(users).output(cols).values(data);
   return row;
 }
+
+export async function findForLogin(email: string) {
+  const db = await getDb();
+  const [row] = await db.select().from(users).where(eq(users.email, email));
+  return row ?? null;
+}
+
+export async function findById(id: number) {
+  const db = await getDb();
+  const [row] = await db.select(cols).from(users).where(eq(users.id, id));
+  return row ?? null;
+}

@@ -28,3 +28,9 @@ export async function remove(req: Request, res: Response) {
     handleError(res, e);
   }
 }
+
+export async function createForStall(req: Request, res: Response) {
+  const { params, body } = res.locals.valid;
+  const data = await service.createForStall(params.id, req.user!.id, body); // userId dari token
+  return res.status(201).json({ status: 'success', data });
+}

@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { StallService } from '../services/stallService.ts';
+import { handleError } from '../utils/errors.ts';
 
 export class StallController {
   private stallService: StallService;
@@ -8,79 +9,66 @@ export class StallController {
     this.stallService = stallService;
   }
 
-  private handleError(res: Response, error: unknown): Response {
-    if (error instanceof Error && error.message === 'STALL_NOT_FOUND') {
-      return res.status(404).json({ status: 'fail', message: 'Data warung tidak ditemukan' });
-    }
-    return res.status(500).json({
-      status: 'error',
-      message: 'Terjadi kesalahan pada server',
-      error: error instanceof Error ? error.message : String(error),
-    });
-  }
-
-  getStalls = async (req: Request, res: Response): Promise<Response> => {
+  getStalls = async (_req: Request, res: Response): Promise<Response> => {
     try {
-      const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 10;
-      const search = typeof req.query.search === 'string' ? req.query.search : undefined;
-      const category = typeof req.query.category === 'string' ? req.query.category : undefined;
-
-      const { data, total } = await this.stallService.getAllStalls({
-        search,
-        category,
-        page,
-        limit,
-      });
-
+      const { page, limit, search, category } = res.locals.valid.query;
+      const { data, total } = await this.stallService.getAllStalls({ search, category, page, limit });
       return res.status(200).json({ status: 'success', meta: { page, limit, total }, data });
     } catch (error) {
-      return this.handleError(res, error);
+      return handleError(res, error);
     }
   };
 
-  getStallById = async (req: Request, res: Response): Promise<Response> => {
+  getStallById = async (_req: Request, res: Response): Promise<Response> => {
     try {
-      const stall = await this.stallService.getStallById(Number(req.params.id));
+      const stall = await this.stallService.getStallById(res.locals.valid.params.id);
       return res.status(200).json({ status: 'success', data: stall });
     } catch (error) {
-      return this.handleError(res, error);
+      return handleError(res, error);
     }
   };
 
-  getStallMenus = async (req: Request, res: Response): Promise<Response> => {
+  getStallMenus = async (_req: Request, res: Response): Promise<Response> => {
     try {
-      const menus = await this.stallService.getStallMenus(Number(req.params.id));
+      const menus = await this.stallService.getStallMenus(res.locals.valid.params.id);
       return res.status(200).json({ status: 'success', data: menus });
     } catch (error) {
-      return this.handleError(res, error);
+      return handleError(res, error);
     }
   };
 
   createStall = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const stall = await this.stallService.createStall(req.body);
+      // ownerId dari TOKEN, bukan body
+      const stall = await this.stallService.createStall({
+        ...res.locals.valid.body,
+        ownerId: req.user!.id,
+      });
       return res.status(201).json({ status: 'success', data: stall });
     } catch (error) {
-      return this.handleError(res, error);
+      return handleError(res, error);
     }
   };
 
   updateStall = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const stall = await this.stallService.updateStall(Number(req.params.id), req.body);
+      const stall = await this.stallService.updateStall(
+        res.locals.valid.params.id,
+        res.locals.valid.body,
+        req.user!,
+      );
       return res.status(200).json({ status: 'success', data: stall });
     } catch (error) {
-      return this.handleError(res, error);
+      return handleError(res, error);
     }
   };
 
-  deleteStall = async (req: Request, res: Response): Promise<Response> => {
+  deleteStall = async (_req: Request, res: Response): Promise<Response> => {
     try {
-      const stall = await this.stallService.deleteStall(Number(req.params.id));
+      const stall = await this.stallService.deleteStall(res.locals.valid.params.id);
       return res.status(200).json({ status: 'success', data: stall });
     } catch (error) {
-      return this.handleError(res, error);
+      return handleError(res, error);
     }
   };
 }

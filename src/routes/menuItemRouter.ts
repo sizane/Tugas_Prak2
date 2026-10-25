@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as ctrl from '../controllers/menuItemController.ts';
+import { authenticate, authorize } from '../middlewares/auth.ts';
 
 const router = Router();
 
@@ -20,22 +21,25 @@ router.get('/:id', (req, res) => {
   return ctrl.get(req, res);
 });
 
-router.post('/', (req, res) => {
+router.post('/', authenticate, authorize('owner', 'admin'), (req, res) => {
   /* #swagger.tags = ['Menu Items']
+     #swagger.security = [{ "bearerAuth": [] }]
      #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/MenuItemInput" } } } }
   */
   return ctrl.create(req, res);
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', authenticate, authorize('owner', 'admin'), (req, res) => {
   /* #swagger.tags = ['Menu Items']
+     #swagger.security = [{ "bearerAuth": [] }]
      #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/MenuItemInput" } } } }
   */
   return ctrl.update(req, res);
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', authenticate, authorize('owner', 'admin'), (req, res) => {
   /* #swagger.tags = ['Menu Items']
+     #swagger.security = [{ "bearerAuth": [] }]
   */
   return ctrl.remove(req, res);
 });

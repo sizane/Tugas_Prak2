@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as ctrl from '../controllers/reviewController.ts';
+import { authenticate, authorize } from '../middlewares/auth.ts';
 
 const router = Router();
 
@@ -13,15 +14,9 @@ router.get('/', (req, res) => {
   return ctrl.list(req, res);
 });
 
-router.post('/', (req, res) => {
+router.delete('/:id', authenticate, authorize('admin'), (req, res) => {
   /* #swagger.tags = ['Reviews']
-     #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/ReviewInput" } } } }
-  */
-  return ctrl.create(req, res);
-});
-
-router.delete('/:id', (req, res) => {
-  /* #swagger.tags = ['Reviews']
+     #swagger.security = [{ "bearerAuth": [] }]
   */
   return ctrl.remove(req, res);
 });
