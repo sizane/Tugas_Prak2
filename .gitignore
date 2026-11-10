@@ -1,2 +1,2 @@
-note_modules
-.env
+backend/node_modules
+backend/.env
