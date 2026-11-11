@@ -20,3 +20,21 @@ export async function remove(req: Request, res: Response) {
     handleError(res, e);
   }
 }
+
+export async function likeReview(req: Request, res: Response) {
+  try {
+    const data = await service.likeByUser(res.locals.valid.params.id, req.user!.id);
+    return res.status(200).json({ status: 'success', data });
+  } catch (e) {
+    handleError(res, e);
+  }
+}
+
+export async function unlikeReview(req: Request, res: Response) {
+  try {
+    const data = await service.unlikeByUser(res.locals.valid.params.id, req.user!.id);
+    return res.status(200).json({ status: 'success', data });
+  } catch (e) {
+    handleError(res, e);
+  }
+}

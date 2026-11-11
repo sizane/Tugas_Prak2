@@ -1,4 +1,5 @@
 import * as repo from '../repositories/likeRepository.ts';
+import * as reviewRepo from '../repositories/reviewRepository.ts';
 import { reviewExists, userExists } from '../repositories/lookupRepository.ts';
 import { parseLike } from '../dtos/likeDto.ts';
 import { AppError } from '../utils/errors.ts';
@@ -19,4 +20,23 @@ export async function remove(reviewIdParam: unknown, userIdParam: unknown) {
   if (!existing) throw new AppError('LIKE_NOT_FOUND', 404, 'Like tidak ditemukan');
   await repo.removeAndSync(reviewId, userId);
   return existing;
+}
+
+async function stateOf(reviewId: number, liked: boolean) {
+  const review = await reviewRepo.findById(reviewId);
+  return { reviewId, liked, likeCount: review?.likeCount ?? 0 };
+}
+
+/** POST /reviews/:id/like : idempotent, user diambil dari token. */
+export async function likeByUser(reviewId: number, userId: number) {
+  if (!(await reviewExists(reviewId))) throw new AppError('REVIEW_NOT_FOUND', 404, 'Review tidak ditemukan');
+  if (!(await repo.find(reviewId, userId))) await repo.createAndSync(reviewId, userId);
+  return stateOf(reviewId, true);
+}
+
+/** DELETE /reviews/:id/like : idempotent, user diambil dari token. */
+export async function unlikeByUser(reviewId: number, userId: number) {
+  if (!(await reviewExists(reviewId))) throw new AppError('REVIEW_NOT_FOUND', 404, 'Review tidak ditemukan');
+  if (await repo.find(reviewId, userId)) await repo.removeAndSync(reviewId, userId);
+  return stateOf(reviewId, false);
 }

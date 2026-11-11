@@ -1,21 +1,13 @@
 import axios from 'axios';
 import type { ApiErrorBody } from '../types/api.ts';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:3000/api';
+const baseURL = import.meta.env.VITE_API_BASE_URL?.trim() || '/api/v1';
 
 export const http = axios.create({
   baseURL,
-  withCredentials: true,
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
+  headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
   timeout: 15000,
 });
-
-// TODO: tambahkan response interceptor untuk menangani 401.
-// Saat menerima 401 dari endpoint selain /auth/me, /auth/login, dan
-// /auth/register, kirim event "auth:unauthorized".
 
 const fieldLabels: Record<string, string> = {
   name: 'Nama',
@@ -38,6 +30,32 @@ const fieldLabels: Record<string, string> = {
   location: 'Lokasi',
   description: 'Deskripsi',
 };
+
+const TOKEN_KEY = 'kantin_token';
+export const tokenStorage = {
+  get: () => localStorage.getItem(TOKEN_KEY),
+  set: (token: string) => localStorage.setItem(TOKEN_KEY, token),
+  clear: () => localStorage.removeItem(TOKEN_KEY),
+};
+
+http.interceptors.request.use((config) => {
+  const token = tokenStorage.get();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+http.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const url: string = error.config?.url ?? '';
+    const isAuthCall = ['/auth/me', '/auth/login', '/auth/register'].some((p) => url.endsWith(p));
+    if (error.response?.status === 401 && !isAuthCall) {
+      tokenStorage.clear();
+      window.dispatchEvent(new Event('auth:unauthorized'));
+    }
+    return Promise.reject(error);
+  },
+);
 
 function fieldLabel(field: string): string {
   if (fieldLabels[field]) return fieldLabels[field];

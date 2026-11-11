@@ -12,12 +12,16 @@ import { OwnerDashboardPage } from './pages/OwnerDashboardPage.tsx';
 import { ProfilePage } from './pages/ProfilePage.tsx';
 import { RegisterPage } from './pages/RegisterPage.tsx';
 import { StallDetailPage } from './pages/StallDetailPage.tsx';
+import { ManageStallsPage } from './pages/ManageStallsPage.tsx';
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          <Route element={<ProtectedRoute roles={['owner', 'admin']} />}>
+            <Route path="manage" element={<ManageStallsPage />} />
+          </Route>
           <Route element={<AppLayout />}>
             <Route index element={<HomePage />} />
             <Route path="login" element={<LoginPage />} />

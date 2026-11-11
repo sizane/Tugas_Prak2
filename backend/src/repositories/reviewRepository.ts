@@ -1,6 +1,6 @@
-import { and, count, desc, eq, sql } from 'drizzle-orm';
+import { and, count, desc, eq, inArray, sql } from 'drizzle-orm';
 import { getDb } from '../db/index.ts';
-import { reviews, stalls, users } from '../db/schema.ts';
+import { likes, reviews, stalls, users } from '../db/schema.ts';
 
 const cols = {
   id: reviews.id,
@@ -72,4 +72,15 @@ export async function removeAndSync(id: number, stallId: number) {
     await tx.delete(reviews).where(eq(reviews.id, id));
     await syncStallStats(tx, stallId);
   });
+}
+
+/** Daftar id review (dari reviewIds) yang sudah di-like oleh userId. */
+export async function likedReviewIds(userId: number, reviewIds: number[]) {
+  if (reviewIds.length === 0) return new Set<number>();
+  const db = await getDb();
+  const rows = await db
+    .select({ reviewId: likes.reviewId })
+    .from(likes)
+    .where(and(eq(likes.userId, userId), inArray(likes.reviewId, reviewIds)));
+  return new Set(rows.map((r) => r.reviewId));
 }

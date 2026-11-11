@@ -19,3 +19,13 @@ export async function updateStatus(req: Request, res: Response) {
     handleError(res, e);
   }
 }
+
+export async function createForReview(req: Request, res: Response) {
+  try {
+    const { params, body } = res.locals.valid;
+    const data = await service.createForReview(params.id, req.user!.id, body);
+    return res.status(201).json({ status: 'success', data });
+  } catch (e) {
+    handleError(res, e);
+  }
+}

@@ -29,3 +29,17 @@ export const authorize = (...roles: Role[]): RequestHandler => (req, _res, next)
   }
   next();
 };
+
+/** Seperti authenticate, tetapi tanpa/dengan token tidak valid tetap lanjut sebagai tamu. */
+export const optionalAuthenticate: RequestHandler = (req, _res, next) => {
+  const header = req.headers.authorization;
+  if (header?.startsWith('Bearer ')) {
+    try {
+      const p = verifyToken(header.slice(7));
+      req.user = { id: Number(p.id), role: p.role };
+    } catch {
+      // token tidak valid: perlakukan sebagai pengunjung biasa
+    }
+  }
+  next();
+};

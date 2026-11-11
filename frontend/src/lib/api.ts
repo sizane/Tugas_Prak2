@@ -11,7 +11,6 @@ import type {
   MenuItem,
   MenuQuery,
   PasswordInput,
-  ProfileInput,
   RegisterInput,
   Review,
   ReviewInput,
@@ -21,28 +20,34 @@ import type {
   User,
   UserRole,
 } from '../types/api.ts';
-import { http } from './http.ts';
+import { http, tokenStorage } from './http.ts';
 
 const data = <T>(response: { data: ApiResponse<T> }): T => response.data.data;
 
 export const authApi = {
-  register: (_input: RegisterInput): Promise<User> => {
-    void _input;
-    return Promise.reject(new Error('authApi.register belum diimplementasikan'));
+  register: (input: RegisterInput): Promise<User> =>
+    http.post<ApiResponse<User>>('/auth/register', input).then(data),
+
+  login: async (input: LoginInput): Promise<User> => {
+    const res = await http.post<ApiResponse<{ token: string }>>('/auth/login', input);
+    tokenStorage.set(res.data.data.token);
+    return authApi.me();
   },
-  login: (_input: LoginInput): Promise<User> => {
-    void _input;
-    return Promise.reject(new Error('authApi.login belum diimplementasikan'));
-  },
+
   me: (): Promise<User> =>
-    Promise.reject(new Error('authApi.me belum diimplementasikan')),
-  logout: (): Promise<void> =>
-    Promise.reject(new Error('authApi.logout belum diimplementasikan')),
+    http.get<ApiResponse<User>>('/auth/me').then(data).catch((error) => {
+      if (error.response?.status === 401) tokenStorage.clear();
+      throw error;
+    }),
+
+  logout: async (): Promise<void> => {
+    tokenStorage.clear();
+  },
 };
 
 export const profileApi = {
   get: () => http.get<ApiResponse<User>>('/profile').then(data),
-  update: (input: ProfileInput) =>
+  update: (input: Partial<User>) =>
     http.put<ApiResponse<User>>('/profile', input).then(data),
   changePassword: (input: PasswordInput) => http.patch('/profile/password', input),
 };
@@ -57,6 +62,8 @@ export const usersApi = {
 };
 
 export const stallsApi = {
+  listPaged: (params?: StallQuery) =>
+  http.get<{ data: Stall[]; meta: { page: number; limit: number; total: number } }>('/stalls', { params }).then((res) => res.data),
   list: (params?: StallQuery) =>
     http.get<ApiResponse<Stall[]>>('/stalls', { params }).then(data),
   get: (id: number) => http.get<ApiResponse<Stall>>(`/stalls/${id}`).then(data),
@@ -68,10 +75,8 @@ export const stallsApi = {
 };
 
 export const menuApi = {
-  list: (_params?: MenuQuery): Promise<MenuItem[]> => {
-    void _params;
-    return Promise.reject(new Error('menuApi.list belum diimplementasikan'));
-  },
+  list: (params?: MenuQuery): Promise<MenuItem[]> =>
+  http.get<ApiResponse<MenuItem[]>>(params?.stallId ? `/stalls/${params.stallId}/menus` : '/menu-items').then(data),
   create: (_input: MenuInput): Promise<MenuItem> => {
     void _input;
     return Promise.reject(new Error('menuApi.create belum diimplementasikan'));

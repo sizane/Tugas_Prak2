@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { StallController } from '../controllers/stallController.ts';
-import { authenticate, authorize } from '../middlewares/auth.ts';
+import { authenticate, authorize, optionalAuthenticate } from '../middlewares/auth.ts';
 import { validate } from '../middlewares/validate.ts';
 import * as reviewCtrl from '../controllers/reviewController.ts';
 import { idParams, listStallsQuery, createStallBody, updateStallBody, createReviewBody } from '../schemas/index.ts';
@@ -66,6 +66,15 @@ stallRouter.get('/:id/menus', validate({ params: idParams }), (req, res) => {
   // #swagger.responses[200] = { description: 'Daftar menu' }
   // #swagger.responses[404] = { description: 'Tidak ditemukan' }
   return stallController.getStallMenus(req, res);
+});
+
+stallRouter.get('/:id/reviews', optionalAuthenticate, validate({ params: idParams }), (req, res) => {
+  // #swagger.parameters['id'] = { in: 'path', required: true, type: 'integer' }
+  // #swagger.parameters['page'] = { in: 'query', type: 'integer' }
+  // #swagger.parameters['limit'] = { in: 'query', type: 'integer' }
+  // #swagger.responses[200] = { description: 'Daftar review warung (likedByMe terisi jika membawa token)' }
+  // #swagger.responses[404] = { description: 'Warung tidak ditemukan' }
+  return reviewCtrl.listForStall(req, res);
 });
 
 stallRouter.post('/:id/reviews',authenticate,validate({ params: idParams, body: createReviewBody }),(req, res) => {

@@ -29,23 +29,28 @@ export function HomePage() {
   const [category, setCategory] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const load = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const result = await stallsApi.list({
+      const result = await stallsApi.listPaged({
         search: search.trim() || undefined,
         category: category.trim() || undefined,
+        page,
+        limit: 9,
       });
-      setStalls(result);
+      setStalls(result.data);
+      setTotalPages(Math.max(1, Math.ceil(result.meta.total / result.meta.limit))); 
     } catch (loadError) {
       setError(getApiErrorMessage(loadError));
     } finally {
       setIsLoading(false);
     }
-  }, [category, search]);
+  }, [category, search, page]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -66,6 +71,7 @@ export function HomePage() {
   function resetFilters(): void {
     setSearch('');
     setCategory('');
+    setPage(1);
   }
 
   return (
@@ -158,7 +164,7 @@ export function HomePage() {
             <input
               className={`${inputClass} pl-9`}
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onChange={(event) => { setSearch(event.target.value); setPage(1); }}
               placeholder="Cari nama warung..."
             />
           </label>
@@ -167,7 +173,7 @@ export function HomePage() {
             <input
               className={inputClass}
               value={category}
-              onChange={(event) => setCategory(event.target.value)}
+              onChange={(event) => { setSearch(event.target.value); setPage(1); }}
               placeholder="Filter kategori..."
             />
           </label>
@@ -222,7 +228,28 @@ export function HomePage() {
                 <StallCard key={stall.id} stall={stall} />
               ))}
             </div>
-          )}
+          )}           
+          {!hasLoadError && stalls.length > 0 ? (
+            <div className="mt-6 flex items-center justify-center gap-4">
+              <Button
+                variant="secondary"
+                onClick={() => setPage((p) => p - 1)}
+                disabled={page <= 1 || isLoading}
+              >
+                Sebelumnya
+              </Button>
+              <span className="text-sm font-semibold text-text-muted">
+                Halaman {page} dari {totalPages}
+              </span>
+              <Button
+                variant="secondary"
+                onClick={() => setPage((p) => p + 1)}
+                disabled={page >= totalPages || isLoading}
+              >
+                Berikutnya
+              </Button>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

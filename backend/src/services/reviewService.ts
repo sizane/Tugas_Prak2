@@ -28,3 +28,16 @@ export async function createForStall(stallId: number, userId: number, body: { ra
   }
   return repo.createAndSync({ stallId, userId, rating: body.rating, comment: body.comment ?? null });
 }
+
+/** GET /stalls/:id/reviews. viewerId (opsional) dipakai untuk menandai likedByMe. */
+export async function listForStall(stallIdParam: unknown, q: any, viewerId?: number) {
+  const stallId = toId(stallIdParam, 'stallId');
+  if (!(await stallExists(stallId))) throw new AppError('STALL_NOT_FOUND', 404, 'Warung tidak ditemukan');
+  const pg = paging({ limit: 50, ...q });
+  const { rows, total } = await repo.findAll({ stallId, ...pg });
+  const liked = viewerId ? await repo.likedReviewIds(viewerId, rows.map((r) => r.id)) : new Set<number>();
+  return {
+    rows: rows.map((r) => ({ ...r, likedByMe: liked.has(r.id) })),
+    meta: { page: pg.page, limit: pg.limit, total },
+  };
+}

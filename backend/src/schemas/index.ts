@@ -26,6 +26,11 @@ export const createReviewBody = z.object({
   comment: z.string().trim().max(1000, 'comment maksimal 1000 karakter').optional(),
 });
 
+// Flags
+export const createFlagBody = z.object({
+  reason: z.string().trim().max(255, 'reason maksimal 255 karakter').nullish(),
+});
+
 // Auth
 const email = z.string().trim().toLowerCase().pipe(z.email('format email tidak valid'));
 

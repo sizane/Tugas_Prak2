@@ -63,7 +63,7 @@ export function StallDetailPage() {
       const [stallData, menuData, reviewData] = await Promise.all([
         stallsApi.get(stallId),
         menuApi.list({ stallId }),
-        reviewsApi.byStall(stallId),
+        reviewsApi.byStall(stallId).catch(() => [] as Review[]),
       ]);
       setStall(stallData);
       setMenus(menuData);
@@ -95,7 +95,7 @@ export function StallDetailPage() {
     try {
       await reviewsApi.create(stallId, {
         rating,
-        comment: comment.trim() || null,
+        comment: comment.trim() || undefined,
       });
       setComment('');
       setRating(5);
@@ -147,7 +147,7 @@ export function StallDetailPage() {
 
     try {
       await flagsApi.create(flaggingReview.id, {
-        reason: flagReason.trim() || null,
+        reason: flagReason.trim() || undefined,
       });
       setFlaggingReview(null);
       setFlagReason('');
@@ -203,7 +203,9 @@ export function StallDetailPage() {
               <Badge>{stall.reviewCount} review</Badge>
             </div>
             <h1 className="mb-1 text-3xl font-extrabold">{stall.name}</h1>
-            <p className="mb-4 text-sm text-text-muted">Dikelola oleh {stall.ownerName}</p>
+            {stall.ownerName ? (
+              <p className="mb-4 text-sm text-text-muted">Dikelola oleh {stall.ownerName}</p>
+            ) : null}
             <p className="mb-4 max-w-2xl text-sm leading-relaxed text-text-muted">
               {stall.description || 'Pemilik warung belum menambahkan deskripsi.'}
             </p>
@@ -319,11 +321,7 @@ export function StallDetailPage() {
           {isCustomer && hasReviewed ? (
             <div className="mb-4">
               <Alert tone="info">
-                Kamu sudah memberi review untuk warung ini. Kelola review di halaman{' '}
-                <Link to="/reviews" className="font-bold underline">
-                  Review Saya
-                </Link>
-                .
+                Kamu sudah memberi review untuk warung ini.
               </Alert>
             </div>
           ) : null}

@@ -25,3 +25,13 @@ export async function createForStall(req: Request, res: Response) {
   const data = await service.createForStall(params.id, req.user!.id, body); // userId dari token
   return res.status(201).json({ status: 'success', data });
 }
+
+export async function listForStall(req: Request, res: Response) {
+  try {
+    const { params } = res.locals.valid;
+    const { rows, meta } = await service.listForStall(params.id, req.query, req.user?.id);
+    return res.status(200).json({ status: 'success', meta, data: rows });
+  } catch (e) {
+    handleError(res, e);
+  }
+}

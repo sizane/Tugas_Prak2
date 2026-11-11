@@ -48,3 +48,21 @@ export async function updateStatus(id: number, status: string) {
   await db.update(flags).set({ status: status as any }).where(eq(flags.id, id));
   return findById(id);
 }
+
+export async function findPendingByUser(reviewId: number, reportedBy: number) {
+  const db = await getDb();
+  const [row] = await db
+    .select({ id: flags.id })
+    .from(flags)
+    .where(and(eq(flags.reviewId, reviewId), eq(flags.reportedBy, reportedBy), eq(flags.status, 'pending' as any)));
+  return row ?? null;
+}
+
+export async function create(reviewId: number, reportedBy: number, reason: string | null) {
+  const db = await getDb();
+  const [row] = await db
+    .insert(flags)
+    .output({ id: flags.id })
+    .values({ reviewId, reportedBy, reason, status: 'pending' });
+  return findById(row.id);
+}

@@ -12,7 +12,7 @@ export interface User {
 export interface Stall {
   id: number;
   ownerId: number;
-  ownerName: string;
+  ownerName?: string;
   name: string;
   category: string | null;
   location: string | null;
@@ -20,13 +20,13 @@ export interface Stall {
   avgRating: number;
   reviewCount: number;
   isPopular: boolean;
-  createdAt: string | null;
+  createdAt?: string | null;
 }
 
 export interface MenuItem {
   id: number;
   stallId: number;
-  stallName: string;
+  stallName?: string;
   name: string;
   price: number;
   isAvailable: boolean;
@@ -98,9 +98,11 @@ export interface LoginInput {
   password: string;
 }
 
-export interface ProfileInput {
-  name?: string;
-  email?: string;
+export interface StallQuery {
+  search?: string;
+  category?: string;
+  page?: number;
+  limit?: number;
 }
 
 export interface PasswordInput {
@@ -111,10 +113,12 @@ export interface PasswordInput {
 export interface StallQuery {
   search?: string;
   category?: string;
+  page?: number;
+  limit?: number;
 }
 
 export interface StallInput {
-  ownerId: number;
+  ownerId?: number;
   name: string;
   category?: string | null;
   location?: string | null;
