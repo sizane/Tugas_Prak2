@@ -1,7 +1,5 @@
 import type {
   ApiResponse,
-  AuditLog,
-  CreateOwnerInput,
   Flag,
   FlagInput,
   FlagStatus,
@@ -10,7 +8,6 @@ import type {
   MenuInput,
   MenuItem,
   MenuQuery,
-  PasswordInput,
   RegisterInput,
   Review,
   ReviewInput,
@@ -18,7 +15,6 @@ import type {
   StallInput,
   StallQuery,
   User,
-  UserRole,
 } from '../types/api.ts';
 import { http, tokenStorage } from './http.ts';
 
@@ -43,22 +39,6 @@ export const authApi = {
   logout: async (): Promise<void> => {
     tokenStorage.clear();
   },
-};
-
-export const profileApi = {
-  get: () => http.get<ApiResponse<User>>('/profile').then(data),
-  update: (input: Partial<User>) =>
-    http.put<ApiResponse<User>>('/profile', input).then(data),
-  changePassword: (input: PasswordInput) => http.patch('/profile/password', input),
-};
-
-export const usersApi = {
-  list: (params?: { role?: UserRole; search?: string }) =>
-    http.get<ApiResponse<User[]>>('/users', { params }).then(data),
-  createOwner: (input: CreateOwnerInput) =>
-    http.post<ApiResponse<User>>('/users/owner', input).then(data),
-  updateRole: (id: number, role: UserRole) =>
-    http.patch<ApiResponse<User>>(`/users/${id}/role`, { role }).then(data),
 };
 
 export const stallsApi = {
@@ -95,8 +75,6 @@ export const menuApi = {
 export const reviewsApi = {
   byStall: (stallId: number) =>
     http.get<ApiResponse<Review[]>>(`/stalls/${stallId}/reviews`).then(data),
-  mine: () => http.get<ApiResponse<Review[]>>('/reviews/mine').then(data),
-  manage: () => http.get<ApiResponse<Review[]>>('/reviews/manage').then(data),
   create: (stallId: number, input: ReviewInput) =>
     http.post<ApiResponse<Review>>(`/stalls/${stallId}/reviews`, input).then(data),
   update: (id: number, input: ReviewInput) =>
@@ -115,9 +93,4 @@ export const flagsApi = {
     http.get<ApiResponse<Flag[]>>('/flags', { params: { status } }).then(data),
   updateStatus: (id: number, status: Exclude<FlagStatus, 'pending'>) =>
     http.patch<ApiResponse<Flag>>(`/flags/${id}`, { status }).then(data),
-};
-
-export const auditApi = {
-  list: (params?: { action?: string; targetTable?: string }) =>
-    http.get<ApiResponse<AuditLog[]>>('/audit-logs', { params }).then(data),
 };

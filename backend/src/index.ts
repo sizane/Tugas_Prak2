@@ -15,10 +15,12 @@ import likeRouter from './routes/likeRouter.ts';
 
 import authRouter from './routes/authRouter.ts';
 import { errorHandler, notFound } from './middlewares/errorHandler.ts';
+import { corsMiddleware } from './middlewares/cors.ts';
 
 const app: Application = express();
-const PORT: number = 3000;
+const PORT: number = Number(process.env.PORT ?? 3000);
 
+app.use(corsMiddleware);
 app.use(express.json());
 
 // Dokumentasi API (Swagger UI)

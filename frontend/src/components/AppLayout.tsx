@@ -1,14 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import {
-  LayoutDashboard,
-  LogOut,
-  MessageSquareText,
-  ShieldCheck,
-  Store,
-  UserRound,
-  UtensilsCrossed,
-} from 'lucide-react';
+import { LayoutDashboard, LogOut, Store, UserRound, UtensilsCrossed } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.tsx';
 import { buttonClass } from '../lib/buttonClass.ts';
 import { formatRole, initials } from '../lib/format.ts';
@@ -39,24 +31,10 @@ function PrimaryNav({
         Warung
       </NavLink>
 
-      {role === 'customer' ? (
-        <NavLink to="/reviews" className={navClass}>
-          <MessageSquareText className="size-4" aria-hidden="true" />
-          Review Saya
-        </NavLink>
-      ) : null}
-
-      {role === 'owner' ? (
-        <NavLink to="/owner" className={navClass}>
+      {role === 'owner' || role === 'admin' ? (
+        <NavLink to="/manage" className={navClass}>
           <LayoutDashboard className="size-4" aria-hidden="true" />
-          Dashboard Warung
-        </NavLink>
-      ) : null}
-
-      {role === 'admin' ? (
-        <NavLink to="/admin" className={navClass}>
-          <ShieldCheck className="size-4" aria-hidden="true" />
-          Panel Admin
+          Kelola Warung
         </NavLink>
       ) : null}
     </nav>
@@ -111,10 +89,7 @@ export function AppLayout() {
                 />
               ) : user ? (
                 <>
-                  <Link
-                    to="/profile"
-                    className="flex items-center gap-2 rounded-control px-2 py-1.5 transition hover:bg-surface-muted"
-                  >
+                  <div className="flex items-center gap-2 rounded-control px-2 py-1.5">
                     <span className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary-dark">
                       {initials(user.name)}
                     </span>
@@ -126,7 +101,7 @@ export function AppLayout() {
                         {formatRole(user.role)}
                       </span>
                     </span>
-                  </Link>
+                  </div>
                   <button
                     type="button"
                     onClick={() => void handleLogout()}
