@@ -48,16 +48,6 @@ npm run dev
 
 Frontend berjalan di `http://localhost:5173`. Secara default request ke `/api/v1` diteruskan oleh proxy Vite ke `http://localhost:3000`. Untuk memakai alamat backend lain, salin `frontend/.env.example` menjadi `frontend/.env` dan ubah `VITE_API_BASE_URL` (mis. `http://localhost:3000/api/v1`); pastikan `CORS_ORIGIN` backend sesuai.
 
-## Akun contoh (setelah menjalankan `seed-passwords`)
-
-Semua akun contoh memakai password `Password123`. Ubah di lingkungan selain lokal.
-
-| Role | Email |
-|---|---|
-| Admin | `admin@kantin.test` |
-| Owner | `budi@kantin.test` (pemilik 3 warung), `siti@kantin.test` (pemilik 2 warung) |
-| Customer | `rangga@student.test`, `dewi@student.test`, `fajar@student.test` |
-
 ## Endpoint yang dipakai frontend (prefix `/api/v1`)
 
 | Method | Path | Akses |
