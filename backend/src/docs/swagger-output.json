@@ -18,6 +18,9 @@
           "200": {
             "description": "OK"
           },
+          "204": {
+            "description": "No Content"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -33,6 +36,9 @@
         "responses": {
           "201": {
             "description": "Akun dibuat"
+          },
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Validasi gagal",
@@ -70,6 +76,9 @@
           "200": {
             "description": "Login berhasil, berisi token"
           },
+          "204": {
+            "description": "No Content"
+          },
           "400": {
             "description": "Validasi gagal"
           },
@@ -98,6 +107,9 @@
         "responses": {
           "200": {
             "description": "Data user dari token"
+          },
+          "204": {
+            "description": "No Content"
           },
           "401": {
             "description": "Token tidak ada / tidak valid"
@@ -147,6 +159,9 @@
           "200": {
             "description": "Daftar warung"
           },
+          "204": {
+            "description": "No Content"
+          },
           "400": {
             "description": "Validasi gagal"
           }
@@ -157,6 +172,9 @@
         "responses": {
           "201": {
             "description": "Warung dibuat"
+          },
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Validasi gagal"
@@ -202,6 +220,9 @@
           "200": {
             "description": "Detail warung"
           },
+          "204": {
+            "description": "No Content"
+          },
           "400": {
             "description": "Validasi gagal"
           },
@@ -225,6 +246,9 @@
         "responses": {
           "200": {
             "description": "Warung ter-update"
+          },
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Validasi gagal"
@@ -271,6 +295,9 @@
           "200": {
             "description": "Warung terhapus"
           },
+          "204": {
+            "description": "No Content"
+          },
           "401": {
             "description": "Belum login"
           },
@@ -305,6 +332,9 @@
           "200": {
             "description": "Daftar menu"
           },
+          "204": {
+            "description": "No Content"
+          },
           "404": {
             "description": "Tidak ditemukan"
           }
@@ -312,6 +342,44 @@
       }
     },
     "/api/v1/stalls/{id}/reviews": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Daftar review warung (likedByMe terisi jika membawa token)"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Warung tidak ditemukan"
+          }
+        }
+      },
       "post": {
         "description": "",
         "parameters": [
@@ -327,6 +395,9 @@
         "responses": {
           "201": {
             "description": "Review dibuat"
+          },
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Validasi gagal"
@@ -399,6 +470,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -415,6 +489,9 @@
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -483,6 +560,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
           }
         }
       },
@@ -494,6 +574,9 @@
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -532,6 +615,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
           }
         }
       },
@@ -553,6 +639,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -589,6 +678,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -639,6 +731,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -662,6 +757,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -669,6 +767,137 @@
             "bearerAuth": []
           }
         ]
+      }
+    },
+    "/api/v1/reviews/{id}/like": {
+      "post": {
+        "tags": [
+          "Reviews"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review di-like"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Hanya customer"
+          },
+          "404": {
+            "description": "Review tidak ditemukan"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Reviews"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Like dibatalkan"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Hanya customer"
+          },
+          "404": {
+            "description": "Review tidak ditemukan"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/reviews/{id}/flags": {
+      "post": {
+        "tags": [
+          "Reviews"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Laporan dibuat (status pending)"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Validasi gagal"
+          },
+          "403": {
+            "description": "Bukan customer / review milik sendiri"
+          },
+          "404": {
+            "description": "Review tidak ditemukan"
+          },
+          "409": {
+            "description": "Sudah pernah melaporkan"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "example": "Mengandung ujaran kebencian"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/flags/": {
@@ -711,6 +940,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -739,6 +971,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -805,6 +1040,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -821,6 +1059,9 @@
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -849,6 +1090,9 @@
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
@@ -895,6 +1139,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
           }
         },
         "security": [
