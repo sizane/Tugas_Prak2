@@ -9,10 +9,11 @@ END
 GO
 
 -- 2) Login aplikasi (SQL Authentication).
+--    Ganti password di bawah, lalu samakan dengan DB_PASSWORD di backend/.env.
 IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'praktikum_user')
 BEGIN
     CREATE LOGIN praktikum_user
-        WITH PASSWORD = N'Praktikum2026!',
+        WITH PASSWORD = N'GANTI_DENGAN_PASSWORD_KUAT',
              DEFAULT_DATABASE = review_kantin;
 END
 GO
