@@ -30,7 +30,7 @@ Konfigurasi `backend/.env` format seperti di `backend/.env.example` :
 | Variabel | Keterangan |
 |---|---|
 | `PORT` | Port API (default 3000) |
-| `CORS_ORIGIN` | Origin frontend, default `http://localhost:5173` (sesuaikan port anda sebelumanya 1433 menjadi 5173 karena ganti laptop) |
+| `CORS_ORIGIN` | Origin frontend, default `http://localhost:1433`  |
 | `DB_SERVER`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` | Koneksi SQL Server |
 | `DB_ENCRYPT`, `DB_TRUST_SERVER_CERTIFICATE` | Opsi koneksi |
 | `JWT_SECRET` | String acak panjang (wajib) |
