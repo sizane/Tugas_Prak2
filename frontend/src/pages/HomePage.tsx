@@ -190,7 +190,19 @@ export function HomePage() {
           </div>
         ) : null}
 
-        <div aria-busy={isLoading}>
+                <div
+          aria-busy={isLoading}
+          className={isLoading && stalls.length > 0 ? 'opacity-60 transition-opacity' : undefined}
+        >
+          {isLoading && stalls.length > 0 ? (
+            <div
+              role="status"
+              className="mb-3 flex items-center gap-2 text-sm font-semibold text-text-muted"
+            >
+              <Spinner className="size-4 text-primary" />
+              Memuat ulang daftar warung...
+            </div>
+          ) : null}
           {isLoading && stalls.length === 0 ? (
             <LoadingPanel message="Memuat daftar warung..." />
           ) : hasLoadError ? (
