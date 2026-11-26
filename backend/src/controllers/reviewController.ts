@@ -13,7 +13,7 @@ export async function list(req: Request, res: Response) {
 
 export async function remove(req: Request, res: Response) {
   try {
-    const data = await service.remove(req.params.id);
+    const data = await service.remove(req.params.id, req.user!.id);
     return res.status(200).json({ status: 'success', message: 'Review dihapus', data });
   } catch (e) {
     handleError(res, e);
@@ -22,7 +22,7 @@ export async function remove(req: Request, res: Response) {
 
 export async function createForStall(req: Request, res: Response) {
   const { params, body } = res.locals.valid;
-  const data = await service.createForStall(params.id, req.user!.id, body); // userId dari token
+  const data = await service.createForStall(params.id, req.user!.id, body);
   return res.status(201).json({ status: 'success', data });
 }
 

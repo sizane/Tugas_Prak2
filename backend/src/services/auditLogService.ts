@@ -1,28 +1,68 @@
 import * as repo from '../repositories/auditLogRepository.ts';
-import { userExists } from '../repositories/lookupRepository.ts';
-import { parseCreateAuditLog } from '../dtos/auditLogDto.ts';
+import type { AuditEntry } from '../repositories/auditLogRepository.ts';
+import type { AuditLogQuery } from '../schemas/auditLogSchema.ts';
 import { AppError } from '../utils/errors.ts';
-import { paging, toId } from '../utils/validate.ts';
 
 const parseMeta = (s: string | null) => {
   if (!s) return null;
   try { return JSON.parse(s); } catch { return s; }
 };
-const shape = <T extends { metadata: string | null }>(r: T) => ({ ...r, metadata: parseMeta(r.metadata) });
 
-export async function list(q: any) {
-  const pg = paging(q);
-  const { rows, total } = await repo.findAll({
-    userId: q.userId ? toId(q.userId, 'userId') : undefined,
-    action: q.action ? String(q.action).toUpperCase() : undefined,
-    targetTable: q.targetTable ? String(q.targetTable).toUpperCase() : undefined,
-    ...pg,
-  });
-  return { data: rows.map(shape), meta: { page: pg.page, limit: pg.limit, total } };
+function toIso(value: Date | string | null): string | null {
+  if (!value) return null;
+  return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
 }
 
-export async function create(body: any) {
-  const dto = parseCreateAuditLog(body);
-  if (!(await userExists(dto.userId))) throw new AppError('USER_NOT_FOUND', 404, 'User tidak ditemukan');
-  return shape((await repo.create(dto))!);
+const shape = <T extends { metadata: string | null; createdAt: Date | string | null }>(r: T) => ({
+  ...r,
+  metadata: parseMeta(r.metadata),
+  createdAt: toIso(r.createdAt),
+});
+
+export async function list(query: AuditLogQuery) {
+  const offset = (query.page - 1) * query.pageSize;
+  const { rows, total } = await repo.findAll({
+    userId: query.userId,
+    action: query.action,
+    targetTable: query.targetTable,
+    targetId: query.targetId,
+    from: query.from,
+    to: query.to,
+    page: query.page,
+    pageSize: query.pageSize,
+    offset,
+  });
+  const totalPages = total === 0 ? 0 : Math.ceil(total / query.pageSize);
+  return {
+    items: rows.map(shape),
+    pagination: {
+      page: query.page,
+      pageSize: query.pageSize,
+      total,
+      totalPages,
+    },
+  };
+}
+
+export async function getById(id: number) {
+  const row = await repo.findById(id);
+  if (!row) throw new AppError('NOT_FOUND', 404, 'Catatan audit tidak ditemukan');
+  return shape(row);
+}
+
+/** Dipanggil di dalam transaksi mutasi bisnis supaya audit ikut atomik. */
+export async function record(entry: AuditEntry): Promise<void> {
+  await repo.insertAudit(entry);
+}
+
+/**
+ * Login/Logout bersifat best-effort: kegagalan audit tidak boleh menggagalkan
+ * autentikasi. Kegagalan hanya di-log ke console.
+ */
+export async function recordBestEffort(entry: AuditEntry): Promise<void> {
+  try {
+    await repo.insertAudit(entry);
+  } catch (error) {
+    console.error(`Audit ${entry.action} gagal dicatat:`, error);
+  }
 }

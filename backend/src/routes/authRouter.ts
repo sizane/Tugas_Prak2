@@ -26,6 +26,15 @@ router.post('/login', validate({ body: loginBody }), (req, res) => {
   return ctrl.login(req, res);
 });
 
+router.post('/logout', authenticate, (req, res) => {
+  /* #swagger.tags = ['Auth']
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.responses[200] = { description: 'Logout berhasil' }
+     #swagger.responses[401] = { description: 'Token tidak ada / tidak valid' }
+  */
+  return ctrl.logout(req, res);
+});
+
 router.get('/me', authenticate, (req, res) => {
   /* #swagger.tags = ['Auth']
      #swagger.security = [{ "bearerAuth": [] }]

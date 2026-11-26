@@ -1,5 +1,8 @@
 import type {
   ApiResponse,
+  AuditLog,
+  AuditLogFilters,
+  AuditLogList,
   Flag,
   FlagInput,
   FlagStatus,
@@ -37,6 +40,11 @@ export const authApi = {
     }),
 
   logout: async (): Promise<void> => {
+    try {
+      await http.post('/auth/logout');
+    } catch {
+      // Logout best-effort: even if the backend call fails, clear local token
+    }
     tokenStorage.clear();
   },
 };
@@ -93,4 +101,14 @@ export const flagsApi = {
     http.get<ApiResponse<Flag[]>>('/flags', { params: { status } }).then(data),
   updateStatus: (id: number, status: Exclude<FlagStatus, 'pending'>) =>
     http.patch<ApiResponse<Flag>>(`/flags/${id}`, { status }).then(data),
+};
+
+export const auditApi = {
+  list: (filters?: AuditLogFilters): Promise<AuditLogList> =>
+    http
+      .get<ApiResponse<AuditLogList>>('/audit-logs', { params: filters })
+      .then(data),
+
+  getById: (id: number): Promise<AuditLog> =>
+    http.get<ApiResponse<AuditLog>>(`/audit-logs/${id}`).then(data),
 };

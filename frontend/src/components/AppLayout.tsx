@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, LogOut, Store, UserRound, UtensilsCrossed } from 'lucide-react';
+import { LayoutDashboard, LogOut, ScrollText, Store, UserRound, UtensilsCrossed } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.tsx';
 import { buttonClass } from '../lib/buttonClass.ts';
 import { formatRole, initials } from '../lib/format.ts';
@@ -35,6 +35,13 @@ function PrimaryNav({
         <NavLink to="/manage" className={navClass}>
           <LayoutDashboard className="size-4" aria-hidden="true" />
           Kelola Warung
+        </NavLink>
+      ) : null}
+
+      {role === 'admin' ? (
+        <NavLink to="/admin/audit-logs" className={navClass}>
+          <ScrollText className="size-4" aria-hidden="true" />
+          Audit Log
         </NavLink>
       ) : null}
     </nav>

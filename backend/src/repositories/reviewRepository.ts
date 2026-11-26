@@ -1,6 +1,6 @@
 import { and, count, desc, eq, inArray, sql } from 'drizzle-orm';
 import { getDb } from '../db/index.ts';
-import { likes, reviews, stalls, users } from '../db/schema.ts';
+import { auditLogs, likes, reviews, stalls, users } from '../db/schema.ts';
 
 const cols = {
   id: reviews.id,
@@ -61,16 +61,34 @@ export async function createAndSync(data: { stallId: number; userId: number; rat
   const id = await db.transaction(async (tx) => {
     const [row] = await tx.insert(reviews).output({ id: reviews.id }).values({ ...data, likeCount: 0 });
     await syncStallStats(tx, data.stallId);
+    await tx.insert(auditLogs).values({
+      userId: data.userId,
+      action: 'CREATE_REVIEW',
+      targetTable: 'REVIEWS',
+      targetId: row.id,
+      metadata: JSON.stringify({
+        stallId: data.stallId,
+        rating: data.rating,
+        comment: data.comment,
+      }),
+    });
     return row.id;
   });
   return findById(id);
 }
 
-export async function removeAndSync(id: number, stallId: number) {
+export async function removeAndSync(id: number, stallId: number, actorId: number, rating: number) {
   const db = await getDb();
   await db.transaction(async (tx) => {
     await tx.delete(reviews).where(eq(reviews.id, id));
     await syncStallStats(tx, stallId);
+    await tx.insert(auditLogs).values({
+      userId: actorId,
+      action: 'DELETE_REVIEW',
+      targetTable: 'REVIEWS',
+      targetId: id,
+      metadata: JSON.stringify({ stallId, rating }),
+    });
   });
 }
 

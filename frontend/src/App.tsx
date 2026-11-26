@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AppLayout } from './components/AppLayout.tsx';
 import { ProtectedRoute } from './components/ProtectedRoute.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
+import { AuditLogPage } from './pages/AuditLogPage.tsx';
 import { ForbiddenPage } from './pages/ForbiddenPage.tsx';
 import { HomePage } from './pages/HomePage.tsx';
 import { LoginPage } from './pages/LoginPage.tsx';
@@ -24,6 +25,10 @@ function App() {
 
             <Route element={<ProtectedRoute roles={['owner', 'admin']} />}>
               <Route path="manage" element={<ManageStallsPage />} />
+            </Route>
+
+            <Route element={<ProtectedRoute roles={['admin']} />}>
+              <Route path="admin/audit-logs" element={<AuditLogPage />} />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />

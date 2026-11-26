@@ -13,11 +13,11 @@ export async function list(q: any, stallIdFromPath?: unknown) {
   return { data: rows, meta: { page: pg.page, limit: pg.limit, total } };
 }
 
-export async function remove(idParam: unknown) {
+export async function remove(idParam: unknown, actorId: number) {
   const id = toId(idParam);
   const existing = await repo.findById(id);
   if (!existing) throw notFound();
-  await repo.removeAndSync(id, existing.stallId);
+  await repo.removeAndSync(id, existing.stallId, actorId, existing.rating);
   return existing;
 }
 
