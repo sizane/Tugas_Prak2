@@ -40,22 +40,25 @@ app.get('/health', async (req: Request, res: Response) => {
   }
 });
 
-// Daftarkan route dengan prefix /api/v1 dan juga /api (kompatibilitas pengujian)
-const routes = [
-  { path: 'auth', router: authRouter },
-  { path: 'stalls', router: stallRouter },
-  { path: 'users', router: userRouter },
-  { path: 'menu-items', router: menuItemRouter },
-  { path: 'reviews', router: reviewRouter },
-  { path: 'flags', router: flagRouter },
-  { path: 'audit-logs', router: auditLogRouter },
-  { path: 'likes', router: likeRouter },
-];
+// Daftarkan route secara eksplisit agar dikenali oleh swagger-autogen
+app.use('/api/v1/auth', authRouter); 
+app.use('/api/v1/stalls', stallRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/menu-items', menuItemRouter);
+app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/flags', flagRouter);
+app.use('/api/v1/audit-logs', auditLogRouter);
+app.use('/api/v1/likes', likeRouter);
 
-for (const { path, router } of routes) {
-  app.use(`/api/v1/${path}`, router);
-  app.use(`/api/${path}`, router);
-}
+// Kompatibilitas rute tanpa prefix /v1
+app.use('/api/auth', authRouter); 
+app.use('/api/stalls', stallRouter);
+app.use('/api/users', userRouter);
+app.use('/api/menu-items', menuItemRouter);
+app.use('/api/reviews', reviewRouter);
+app.use('/api/flags', flagRouter);
+app.use('/api/audit-logs', auditLogRouter);
+app.use('/api/likes', likeRouter);
 
 app.use(notFound);
 app.use(errorHandler);
