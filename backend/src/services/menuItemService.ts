@@ -25,24 +25,24 @@ export async function get(idParam: unknown) {
   return item;
 }
 
-export async function create(body: any) {
+export async function create(body: any, userId: number) {
   const dto = parseCreateMenuItem(body);
   if (!(await stallExists(dto.stallId))) throw stallNotFound();
-  return repo.create(dto);
+  return repo.createWithAudit(dto, userId);
 }
 
-export async function update(idParam: unknown, body: any) {
+export async function update(idParam: unknown, body: any, userId: number) {
   const id = toId(idParam);
   if (!(await repo.findById(id))) throw notFound();
   const dto = parseUpdateMenuItem(body);
   if (dto.stallId !== undefined && !(await stallExists(dto.stallId))) throw stallNotFound();
-  return repo.update(id, dto);
+  return repo.updateWithAudit(id, dto, userId);
 }
 
-export async function remove(idParam: unknown) {
+export async function remove(idParam: unknown, userId: number) {
   const id = toId(idParam);
   const item = await repo.findById(id);
   if (!item) throw notFound();
-  await repo.remove(id);
+  await repo.removeWithAudit(id, userId, item.name);
   return item;
 }

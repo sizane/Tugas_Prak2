@@ -55,27 +55,28 @@ export class StallService {
     return this.menuItemRepository.findByStallId(id);
   }
 
-  async createStall(input: CreateStallInput): Promise<StallResponseDto> {
-    const row = await this.stallRepository.create(input);
+  async createStall(input: CreateStallInput, actorId: number): Promise<StallResponseDto> {
+    const row = await this.stallRepository.create(input, actorId);
     if (!row) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
     return this.toDto(row);
   }
 
   async updateStall(id: number, input: Partial<CreateStallInput>, actor: AuthUser): Promise<StallResponseDto> {
-  const existing = await this.stallRepository.findById(id);
-  if (!existing) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
-  if (actor.role !== 'admin' && existing.ownerId !== actor.id) {
-    throw new AppError('FORBIDDEN', 403, 'Anda bukan pemilik warung ini'); // owner lain -> 403
+    const existing = await this.stallRepository.findById(id);
+    if (!existing) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
+    if (actor.role !== 'admin' && existing.ownerId !== actor.id) {
+      throw new AppError('FORBIDDEN', 403, 'Anda bukan pemilik warung ini');
+    }
+    const row = await this.stallRepository.update(id, input, actor.id);
+    if (!row) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
+    return this.toDto(row);
   }
-  const row = await this.stallRepository.update(id, input);
-  if (!row) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
-  return this.toDto(row);
- }
 
-  async deleteStall(id: number): Promise<StallResponseDto> {
-    const row = await this.stallRepository.remove(id);
+  async deleteStall(id: number, actorId: number): Promise<StallResponseDto> {
+    const existing = await this.stallRepository.findById(id);
+    if (!existing) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
+    const row = await this.stallRepository.remove(id, actorId, existing.name);
     if (!row) throw new AppError('STALL_NOT_FOUND', 404, 'Data warung tidak ditemukan');
     return this.toDto(row);
   }
 }
-

@@ -40,7 +40,7 @@ app.get('/health', async (req: Request, res: Response) => {
   }
 });
 
-// 2. Daftarkan semua route dengan prefix /api/v1
+// Daftarkan route secara eksplisit agar dikenali oleh swagger-autogen
 app.use('/api/v1/auth', authRouter); 
 app.use('/api/v1/stalls', stallRouter);
 app.use('/api/v1/users', userRouter);
@@ -49,6 +49,17 @@ app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/flags', flagRouter);
 app.use('/api/v1/audit-logs', auditLogRouter);
 app.use('/api/v1/likes', likeRouter);
+
+// Kompatibilitas rute tanpa prefix /v1
+app.use('/api/auth', authRouter); 
+app.use('/api/stalls', stallRouter);
+app.use('/api/users', userRouter);
+app.use('/api/menu-items', menuItemRouter);
+app.use('/api/reviews', reviewRouter);
+app.use('/api/flags', flagRouter);
+app.use('/api/audit-logs', auditLogRouter);
+app.use('/api/likes', likeRouter);
+
 app.use(notFound);
 app.use(errorHandler);
 

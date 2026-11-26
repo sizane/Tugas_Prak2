@@ -1,6 +1,6 @@
 import { and, count, eq, like, type SQL } from 'drizzle-orm';
 import { getDb } from '../db/index.ts';
-import { stalls } from '../db/schema.ts';
+import { auditLogs, stalls } from '../db/schema.ts';
 
 export interface FindAllParams {
   search?: string;
@@ -28,7 +28,6 @@ export class StallRepository {
 
     const offset = (params.page - 1) * params.limit;
 
-    // MSSQL: pagination memakai ORDER BY + OFFSET ... FETCH NEXT.
     const rows = await db
       .select()
       .from(stalls)
@@ -48,42 +47,82 @@ export class StallRepository {
     return rows[0];
   }
 
-  async create(input: CreateStallInput) {
+  async create(input: CreateStallInput, actorId: number) {
     const db = await getDb();
-    const rows = await db
-      .insert(stalls)
-      .output()
-      .values({
-        ownerId: input.ownerId,
-        name: input.name,
-        category: input.category ?? null,
-        location: input.location ?? null,
-        description: input.description ?? null,
-        avgRating: '0.00',
-        reviewCount: 0,
+    const row = await db.transaction(async (tx) => {
+      const [newStall] = await tx
+        .insert(stalls)
+        .output()
+        .values({
+          ownerId: input.ownerId,
+          name: input.name,
+          category: input.category ?? null,
+          location: input.location ?? null,
+          description: input.description ?? null,
+          avgRating: '0.00',
+          reviewCount: 0,
+        });
+
+      await tx.insert(auditLogs).values({
+        userId: actorId,
+        action: 'CREATE_STALL',
+        targetTable: 'STALLS',
+        targetId: newStall.id,
+        metadata: JSON.stringify({
+          name: input.name,
+          category: input.category,
+          location: input.location,
+        }),
       });
-    return rows[0];
+
+      return newStall;
+    });
+    return row;
   }
 
-  async update(id: number, input: Partial<CreateStallInput>) {
+  async update(id: number, input: Partial<CreateStallInput>, actorId: number) {
     const db = await getDb();
-    const rows = await db
-      .update(stalls)
-      .set({
-        ...(input.ownerId !== undefined ? { ownerId: input.ownerId } : {}),
-        ...(input.name !== undefined ? { name: input.name } : {}),
-        ...(input.category !== undefined ? { category: input.category } : {}),
-        ...(input.location !== undefined ? { location: input.location } : {}),
-        ...(input.description !== undefined ? { description: input.description } : {}),
-      })
-      .where(eq(stalls.id, id))
-      .output();
-    return rows[0];
+    const row = await db.transaction(async (tx) => {
+      const [updatedStall] = await tx
+        .update(stalls)
+        .set({
+          ...(input.ownerId !== undefined ? { ownerId: input.ownerId } : {}),
+          ...(input.name !== undefined ? { name: input.name } : {}),
+          ...(input.category !== undefined ? { category: input.category } : {}),
+          ...(input.location !== undefined ? { location: input.location } : {}),
+          ...(input.description !== undefined ? { description: input.description } : {}),
+        })
+        .where(eq(stalls.id, id))
+        .output();
+
+      await tx.insert(auditLogs).values({
+        userId: actorId,
+        action: 'UPDATE_STALL',
+        targetTable: 'STALLS',
+        targetId: id,
+        metadata: JSON.stringify(input),
+      });
+
+      return updatedStall;
+    });
+    return row;
   }
 
-  async remove(id: number) {
+  async remove(id: number, actorId: number, name: string) {
     const db = await getDb();
-    const rows = await db.delete(stalls).where(eq(stalls.id, id)).output();
-    return rows[0];
+    const row = await db.transaction(async (tx) => {
+      const [deletedStall] = await tx.delete(stalls).where(eq(stalls.id, id)).output();
+
+      await tx.insert(auditLogs).values({
+        userId: actorId,
+        action: 'DELETE_STALL',
+        targetTable: 'STALLS',
+        targetId: id,
+        metadata: JSON.stringify({ name }),
+      });
+
+      return deletedStall;
+    });
+    return row;
   }
 }

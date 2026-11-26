@@ -73,6 +73,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const logout = useCallback(async () => {
     try {
       await authApi.logout();
+    } catch {
+      // Logout best-effort: tetap hapus user meski API gagal
     } finally {
       setUser(null);
     }

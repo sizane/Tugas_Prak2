@@ -67,13 +67,37 @@ export interface Flag {
 
 export interface AuditLog {
   id: number;
-  userId: number;
-  userName: string;
+  userId: number | null;
+  userName: string | null;
+  userEmail: string | null;
   action: string;
   targetTable: string;
-  targetId: number;
-  metadata: string | null;
+  targetId: number | null;
+  metadata: unknown;
   createdAt: string | null;
+}
+
+export interface AuditLogPagination {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface AuditLogList {
+  items: AuditLog[];
+  pagination: AuditLogPagination;
+}
+
+export interface AuditLogFilters {
+  page?: number;
+  pageSize?: number;
+  action?: string;
+  targetTable?: string;
+  targetId?: number;
+  userId?: number;
+  from?: string;
+  to?: string;
 }
 
 export interface ApiResponse<T> {
@@ -108,13 +132,6 @@ export interface StallQuery {
 export interface PasswordInput {
   currentPassword: string;
   newPassword: string;
-}
-
-export interface StallQuery {
-  search?: string;
-  category?: string;
-  page?: number;
-  limit?: number;
 }
 
 export interface StallInput {

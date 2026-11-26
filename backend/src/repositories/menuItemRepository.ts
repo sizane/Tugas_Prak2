@@ -1,6 +1,6 @@
 import { and, count, eq, like } from 'drizzle-orm';
 import { getDb } from '../db/index.ts';
-import { menuItems, stalls } from '../db/schema.ts';
+import { auditLogs, menuItems, stalls } from '../db/schema.ts';
 
 export class MenuItemRepository {
   async findByStallId(stallId: number) {
@@ -49,19 +49,54 @@ export async function findById(id: number) {
   return row ?? null;
 }
 
-export async function create(data: { stallId: number; name: string; price: number; isAvailable: boolean }) {
+export async function createWithAudit(
+  data: { stallId: number; name: string; price: number; isAvailable: boolean },
+  userId: number,
+) {
   const db = await getDb();
-  const [row] = await db.insert(menuItems).output({ id: menuItems.id }).values(data);
-  return findById(row.id);
-}
-
-export async function update(id: number, data: Record<string, unknown>) {
-  const db = await getDb();
-  await db.update(menuItems).set(data).where(eq(menuItems.id, id));
+  const id = await db.transaction(async (tx) => {
+    const [row] = await tx.insert(menuItems).output({ id: menuItems.id }).values(data);
+    await tx.insert(auditLogs).values({
+      userId,
+      action: 'CREATE_MENU',
+      targetTable: 'MENU_ITEMS',
+      targetId: row.id,
+      metadata: JSON.stringify({ name: data.name, price: data.price, stallId: data.stallId }),
+    });
+    return row.id;
+  });
   return findById(id);
 }
 
-export async function remove(id: number) {
+export async function updateWithAudit(
+  id: number,
+  data: Record<string, unknown>,
+  userId: number,
+) {
   const db = await getDb();
-  await db.delete(menuItems).where(eq(menuItems.id, id));
+  await db.transaction(async (tx) => {
+    await tx.update(menuItems).set(data).where(eq(menuItems.id, id));
+    await tx.insert(auditLogs).values({
+      userId,
+      action: 'UPDATE_MENU',
+      targetTable: 'MENU_ITEMS',
+      targetId: id,
+      metadata: JSON.stringify(data),
+    });
+  });
+  return findById(id);
+}
+
+export async function removeWithAudit(id: number, userId: number, name: string) {
+  const db = await getDb();
+  await db.transaction(async (tx) => {
+    await tx.delete(menuItems).where(eq(menuItems.id, id));
+    await tx.insert(auditLogs).values({
+      userId,
+      action: 'DELETE_MENU',
+      targetTable: 'MENU_ITEMS',
+      targetId: id,
+      metadata: JSON.stringify({ name }),
+    });
+  });
 }

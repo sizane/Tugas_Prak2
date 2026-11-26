@@ -39,11 +39,13 @@ export class StallController {
 
   createStall = async (req: Request, res: Response): Promise<Response> => {
     try {
-      // ownerId dari TOKEN, bukan body
-      const stall = await this.stallService.createStall({
-        ...res.locals.valid.body,
-        ownerId: req.user!.id,
-      });
+      const stall = await this.stallService.createStall(
+        {
+          ...res.locals.valid.body,
+          ownerId: req.user!.id,
+        },
+        req.user!.id,
+      );
       return res.status(201).json({ status: 'success', data: stall });
     } catch (error) {
       return handleError(res, error);
@@ -63,9 +65,9 @@ export class StallController {
     }
   };
 
-  deleteStall = async (_req: Request, res: Response): Promise<Response> => {
+  deleteStall = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const stall = await this.stallService.deleteStall(res.locals.valid.params.id);
+      const stall = await this.stallService.deleteStall(res.locals.valid.params.id, req.user!.id);
       return res.status(200).json({ status: 'success', data: stall });
     } catch (error) {
       return handleError(res, error);

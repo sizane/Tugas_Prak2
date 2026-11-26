@@ -4,24 +4,27 @@ import { authenticate, authorize } from '../middlewares/auth.ts';
 
 const router = Router();
 router.use(authenticate, authorize('admin'));
+
 router.get('/', (req, res) => {
   /* #swagger.tags = ['Audit Logs']
      #swagger.security = [{ "bearerAuth": [] }]
-     #swagger.parameters['userId'] = { in: 'query' }
-     #swagger.parameters['action'] = { in: 'query' }
-     #swagger.parameters['targetTable'] = { in: 'query', description: 'mis. STALLS, REVIEWS' }
      #swagger.parameters['page'] = { in: 'query' }
-     #swagger.parameters['limit'] = { in: 'query' }
+     #swagger.parameters['pageSize'] = { in: 'query' }
+     #swagger.parameters['action'] = { in: 'query' }
+     #swagger.parameters['targetTable'] = { in: 'query' }
+     #swagger.parameters['targetId'] = { in: 'query' }
+     #swagger.parameters['userId'] = { in: 'query' }
+     #swagger.parameters['from'] = { in: 'query' }
+     #swagger.parameters['to'] = { in: 'query' }
   */
   return ctrl.list(req, res);
 });
 
-router.post('/', (req, res) => {
+router.get('/:id', (req, res) => {
   /* #swagger.tags = ['Audit Logs']
      #swagger.security = [{ "bearerAuth": [] }]
-     #swagger.requestBody = { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/AuditLogInput" } } } }
   */
-  return ctrl.create(req, res);
+  return ctrl.getById(req, res);
 });
 
 export default router;

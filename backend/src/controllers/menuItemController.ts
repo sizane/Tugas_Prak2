@@ -22,7 +22,7 @@ export async function get(req: Request, res: Response) {
 
 export async function create(req: Request, res: Response) {
   try {
-    const data = await service.create(req.body);
+    const data = await service.create(req.body, req.user!.id);
     return res.status(201).json({ status: 'success', data });
   } catch (e) {
     handleError(res, e);
@@ -31,7 +31,7 @@ export async function create(req: Request, res: Response) {
 
 export async function update(req: Request, res: Response) {
   try {
-    const data = await service.update(req.params.id, req.body);
+    const data = await service.update(req.params.id, req.body, req.user!.id);
     return res.status(200).json({ status: 'success', data });
   } catch (e) {
     handleError(res, e);
@@ -40,7 +40,7 @@ export async function update(req: Request, res: Response) {
 
 export async function remove(req: Request, res: Response) {
   try {
-    const data = await service.remove(req.params.id);
+    const data = await service.remove(req.params.id, req.user!.id);
     return res.status(200).json({ status: 'success', message: 'Menu dihapus', data });
   } catch (e) {
     handleError(res, e);
